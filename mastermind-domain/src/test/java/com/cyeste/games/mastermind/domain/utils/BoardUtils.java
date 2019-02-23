@@ -17,7 +17,7 @@ public final class BoardUtils {
 
 	public static Pattern generateCode(Peg.Color... colors) {
 		List<Peg> codePegs = new LinkedList<Peg>();
-		Arrays.stream(colors).forEach(color -> codePegs.add(new Peg(color)));
+		Arrays.stream(colors).forEach(color -> codePegs.add(Peg.createPeg(color)));
 		return new Pattern(codePegs);
 	}
 	
