@@ -19,9 +19,9 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import com.cyeste.games.mastermind.domain.Peg.Color;
 import com.cyeste.games.mastermind.domain.exception.InvalidOperationException;
 @RunWith(BlockJUnit4ClassRunner.class)
-public class BoardGameCreationTest {
+public class DecodingBoardGuessTest {
 
-	private final static Logger LOGGER = Logger.getLogger(BoardGameCreationTest.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(DecodingBoardGuessTest.class.getName());
 	
 	private static final int DEFAULT_MAX_GAMES = 5;
 	private static final Pattern DEFAULT_CODE = generateCode(Peg.Color.BLUE, Peg.Color.GREEN, Peg.Color.GREEN,Peg.Color.YELLOW);
@@ -29,8 +29,10 @@ public class BoardGameCreationTest {
 	
 	@Before
 	public void setUp() {
-		board = new DecodingBoard(DEFAULT_MAX_GAMES, DEFAULT_CODE);
+		board = DecodingBoard.createBoard("id",DEFAULT_MAX_GAMES, DEFAULT_CODE);
 	}
+	
+	
 
 	@Test
 	public void initialState() {

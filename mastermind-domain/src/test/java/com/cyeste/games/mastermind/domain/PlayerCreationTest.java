@@ -13,7 +13,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 public class PlayerCreationTest {
 
 	private static final String DEFAULT_NAME = "Han Solo";
-	private final static Logger LOGGER = Logger.getLogger(BoardGameCreationTest.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(DecodingBoardGuessTest.class.getName());
 	
 	
 

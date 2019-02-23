@@ -35,10 +35,10 @@ public final class BoardUtils {
 	}
 	
 	public static DecodingBoard generateBoard(Peg... pegs) {
-		return new DecodingBoard(DEFAULT_MAX_GAMES_PER_BOARD, generateCode(pegs));
+		return DecodingBoard.createBoard("id", DEFAULT_MAX_GAMES_PER_BOARD, generateCode(pegs));
 	}
 	
 	public static DecodingBoard generateBoard(Peg.Color... colors) {
-		return new DecodingBoard(DEFAULT_MAX_GAMES_PER_BOARD, generateCode(colors));
+		return DecodingBoard.createBoard("id",DEFAULT_MAX_GAMES_PER_BOARD, generateCode(colors));
 	}
 }

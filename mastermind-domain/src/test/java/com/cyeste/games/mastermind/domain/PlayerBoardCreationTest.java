@@ -14,7 +14,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 public class PlayerBoardCreationTest {
 
 	private static final String DEFAULT_NAME = "Han Solo";
-	private final static Logger LOGGER = Logger.getLogger(BoardGameCreationTest.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(DecodingBoardGuessTest.class.getName());
 	private static final Player DEFAULT_PLAYER = Player.builder().id("id").name(DEFAULT_NAME).build();
 	
 	private static final DecodingBoard DEFAULT_BOARD = generateBoard(Peg.Color.GREEN, Peg.Color.GREEN, Peg.Color.GREEN, Peg.Color.YELLOW);
