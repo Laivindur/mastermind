@@ -137,7 +137,6 @@ public class BoardGameCreationTest {
 		assertTrue(guessResult.isExactMatch());
 		assertFalse(board.leftGames());
 		LOGGER.info("Board: " + board.toString());
-
 	}
 
 }
