@@ -19,17 +19,17 @@ public class PlayerCreationTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void withNullName() {
-		new Player(null);
+		Player.builder().name(null).build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void withEmptyName() {
-		new Player("");
+		Player.builder().name("").build();
 	}
 	
 	@Test
 	public void initialState() {
-		Player player = new Player(DEFAULT_NAME);
+		Player player = Player.builder().name(DEFAULT_NAME).build();
 		assertNotNull(player);
 		assertEquals(DEFAULT_NAME, player.getName());
 		LOGGER.info("Player: " + player);

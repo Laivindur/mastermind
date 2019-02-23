@@ -15,7 +15,7 @@ public class PlayerBoardCreationTest {
 
 	private static final String DEFAULT_NAME = "Han Solo";
 	private final static Logger LOGGER = Logger.getLogger(BoardGameCreationTest.class.getName());
-	private static final Player DEFAULT_PLAYER = new Player(DEFAULT_NAME);
+	private static final Player DEFAULT_PLAYER = Player.builder().name(DEFAULT_NAME).build();
 	
 	private static final DecodingBoard DEFAULT_BOARD = generateBoard(Peg.Color.GREEN, Peg.Color.GREEN, Peg.Color.GREEN, Peg.Color.YELLOW);
 
@@ -35,6 +35,7 @@ public class PlayerBoardCreationTest {
 		PlayerBoard playerBoard = PlayerBoard.playerCodeMaker(DEFAULT_PLAYER, DEFAULT_BOARD);
 		Assert.assertNotNull(playerBoard);
 		Assert.assertTrue(playerBoard.isCoder());
+		LOGGER.info("PlayingCodeMaker: " + playerBoard);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -52,5 +53,7 @@ public class PlayerBoardCreationTest {
 		PlayerBoard playerBoard = PlayerBoard.playerCodeBreaker(DEFAULT_PLAYER, DEFAULT_BOARD);
 		Assert.assertNotNull(playerBoard);
 		Assert.assertFalse(playerBoard.isCoder());
+		LOGGER.info("PlayerCodeBreaker: " + playerBoard);
+
 	}
 }

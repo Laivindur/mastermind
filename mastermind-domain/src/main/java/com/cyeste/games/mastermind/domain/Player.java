@@ -7,8 +7,7 @@ public class Player {
 	private static final String TO_STRING = "{name: \"%s\"}";
 	private String name;
 	
-	public Player(String name){
-		Validations.whenEmpty(name).throwIllegalArgumentException("Player's name is required. It cant not be null or empty");
+	private Player(String name){
 		this.name = name;
 	}
 	
@@ -23,5 +22,26 @@ public class Player {
 	@Override
 	public String toString() {
 		return String.format(TO_STRING, name);
+	}
+	
+	public static PlayerBuilder builder() {
+		return new PlayerBuilder();
+	}
+	
+	public final static class PlayerBuilder {
+		private String name;
+		
+		PlayerBuilder() {
+		}
+		
+		public PlayerBuilder name(String name) {
+			Validations.whenEmpty(name).throwIllegalArgumentException("Player's name is required. It cant not be null or empty");
+			this.name = name;
+			return this;
+		}
+		
+		public Player build() {
+			return new Player(name);
+		}
 	}
 }
