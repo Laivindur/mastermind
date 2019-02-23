@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -16,11 +17,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
+import com.cyeste.games.mastermind.domain.Peg.Color;
 import com.cyeste.games.mastermind.domain.exception.InvalidOperationException;
 
 @RunWith(BlockJUnit4ClassRunner.class)
 public class BoardGameCreationTest {
 
+	private final static Logger LOGGER = Logger.getLogger(BoardGameCreationTest.class.getName());
+	
 	private static final int DEFAULT_MAX_GAMES = 5;
 	private static final List<Peg> DEFAULT_PEGS = new LinkedList<Peg>();
 	private Pattern code;
@@ -34,7 +38,7 @@ public class BoardGameCreationTest {
 		DEFAULT_PEGS.add(new Peg(Peg.Color.YELLOW));
 		assertFalse(DEFAULT_PEGS.isEmpty());
 		assertTrue(DEFAULT_PEGS.size() == 4);
-		System.out.println(Arrays.toString(DEFAULT_PEGS.toArray()));
+		LOGGER.info(Arrays.toString(DEFAULT_PEGS.toArray()));
 	}
 
 	@Before
@@ -61,6 +65,7 @@ public class BoardGameCreationTest {
 
 		// then
 		assertTrue(board.leftGames());
+		LOGGER.info("Board: " + board.toString());
 	}
 
 	@Test(expected = InvalidOperationException.class)
@@ -70,6 +75,7 @@ public class BoardGameCreationTest {
 		Pattern guess = new Pattern(guessPegs);
 		for (int gameCount = 0; gameCount < DEFAULT_MAX_GAMES + 1; gameCount++) {
 			board.guess(guess);
+			LOGGER.info("Board: " + board.toString());
 		}
 	}
 
@@ -82,6 +88,7 @@ public class BoardGameCreationTest {
 
 		// when guess for once
 		GuessResult guessResult = board.guess(guess);
+		LOGGER.info("GuessResult: " + guessResult.toString());
 
 		// then
 		assertNotNull(guessResult);
@@ -89,5 +96,48 @@ public class BoardGameCreationTest {
 		assertEquals(2, guessResult.getWhitePegs());
 		assertFalse(guessResult.isExactMatch());
 		assertTrue(board.leftGames());
+		
+		LOGGER.info("Board: " + board.toString());
+
 	}
+
+	@Test
+	public void gussMatchingOnlyColors() {
+		// given a guess
+		List<Peg> guessPegs = new LinkedList<Peg>(Arrays.asList(new Peg(Color.GREEN), new Peg(Color.BLUE),
+				new Peg(Color.YELLOW), new Peg(Peg.Color.GREEN)));
+		Pattern guess = new Pattern(guessPegs);
+
+		// when guess for once
+		GuessResult guessResult = board.guess(guess);
+		LOGGER.info("GuessResult: " + guessResult.toString());
+
+		// then
+		assertNotNull(guessResult);
+		assertEquals(0, guessResult.getColoredPegs());
+		assertEquals(3, guessResult.getWhitePegs());
+		assertFalse(guessResult.isExactMatch());
+		assertTrue(board.leftGames());
+		LOGGER.info("Board: " + board.toString());
+
+	}
+
+	@Test
+	public void guessMatchesCode() {
+		// given
+		Pattern guess = new Pattern(DEFAULT_PEGS);
+		// when guess for once
+		GuessResult guessResult = board.guess(guess);
+		LOGGER.info("GuessResult: " + guessResult.toString());
+
+		// then
+		assertNotNull(guessResult);
+		assertEquals(code.length(), guessResult.getColoredPegs());
+		assertEquals(0, guessResult.getWhitePegs());
+		assertTrue(guessResult.isExactMatch());
+		assertFalse(board.leftGames());
+		LOGGER.info("Board: " + board.toString());
+
+	}
+
 }
