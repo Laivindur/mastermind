@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.cyeste.games.mastermind.domain.exception.InvalidOperationException;
 import com.cyeste.games.mastermind.domain.utils.Validations;
 
 /**
@@ -27,11 +28,14 @@ public class DecodingBoard {
 		solved = false;
 	}
 	
-	public GuessResult guess(Pattern code) {
-		GuessResult result =  new GuessResult(code.clone(), -1, -1);
-		games.add(result);
-		solved = false;
-		return result;
+	public GuessResult guess(Pattern guess) {
+		if(leftGames() || isSolved()) {			
+			GuessResult result =  new GuessResult(code.clone(), code.matchingPegs(guess), code.matchingPegColors(guess));
+			solved = result.isExactMatch();
+			games.add(result);
+			return result;	
+		}		
+		throw new InvalidOperationException("The decoding boards is finished. No more guess are allowed");
 	}
 	
 	public boolean isSolved() {
