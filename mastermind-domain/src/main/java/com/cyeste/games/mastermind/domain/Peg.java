@@ -1,5 +1,7 @@
 package com.cyeste.games.mastermind.domain;
 
+import com.cyeste.games.mastermind.domain.utils.Validations;
+
 /**
  * 
  * @author Christian Yeste Vidal
@@ -10,6 +12,7 @@ public class Peg {
 	private final Color color;
 	
 	public Peg(Color color) {
+		Validations.whenNull(color).throwIllegalArgumentException("Peg's color is required");
 		this.color = color;		
 	}
 	
