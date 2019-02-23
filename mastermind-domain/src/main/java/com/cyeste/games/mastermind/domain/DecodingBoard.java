@@ -35,4 +35,8 @@ public class DecodingBoard {
 	public Iterator<GuessResult> games(){
 		return games.iterator();
 	}
+	
+	public Pattern getCode() {
+		return code;
+	}
 }
