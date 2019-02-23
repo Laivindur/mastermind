@@ -10,6 +10,7 @@ import com.cyeste.games.mastermind.domain.utils.Validations;
 public class Peg {
 	
 	private final Color color;
+	private static final String TO_STRING = "{color: \"%s\"}";
 	
 	public Peg(Color color) {
 		Validations.whenNull(color).throwIllegalArgumentException("Peg's color is required");
@@ -38,6 +39,11 @@ public class Peg {
 		int result = 1;
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		return result;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format(TO_STRING, color.name());
 	}
 
 	public static enum Color {
