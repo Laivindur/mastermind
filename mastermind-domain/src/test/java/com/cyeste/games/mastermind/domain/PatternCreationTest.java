@@ -25,10 +25,10 @@ public class PatternCreationTest {
 
 	@BeforeClass
 	public static void setUp() {
-		DEFAULT_PEGS.add(new Peg(Peg.Color.BLUE));
-		DEFAULT_PEGS.add(new Peg(Peg.Color.GREEN));
-		DEFAULT_PEGS.add(new Peg(Peg.Color.GREEN));
-		DEFAULT_PEGS.add(new Peg(Peg.Color.YELLOW));
+		DEFAULT_PEGS.add(Peg.createPeg(Peg.Color.BLUE));
+		DEFAULT_PEGS.add(Peg.createPeg(Peg.Color.GREEN));
+		DEFAULT_PEGS.add(Peg.createPeg(Peg.Color.GREEN));
+		DEFAULT_PEGS.add(Peg.createPeg(Peg.Color.YELLOW));
 		assertFalse(DEFAULT_PEGS.isEmpty());
 		assertTrue(DEFAULT_PEGS.size() == 4);
 		System.out.println(Arrays.toString(DEFAULT_PEGS.toArray()));
@@ -61,8 +61,8 @@ public class PatternCreationTest {
 	@Test
 	public void hasPeg() {
 		Pattern pattern = new Pattern(DEFAULT_PEGS);
-		assertTrue(pattern.hasPeg(new Peg(Peg.Color.BLUE)));
-		assertTrue(pattern.hasPeg(new Peg(Peg.Color.GREEN)));
+		assertTrue(pattern.hasPeg(Peg.createPeg(Peg.Color.BLUE)));
+		assertTrue(pattern.hasPeg(Peg.createPeg(Peg.Color.GREEN)));
 	}
 
 	@Test

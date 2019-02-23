@@ -12,7 +12,7 @@ public class Peg {
 	private final Color color;
 	private static final String TO_STRING = "{color: \"%s\"}";
 	
-	Peg(Color color) {
+	private Peg(Color color) {
 		Validations.whenNull(color).throwIllegalArgumentException("Peg's color is required");
 		this.color = color;		
 	}

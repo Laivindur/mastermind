@@ -1,5 +1,6 @@
 package com.cyeste.games.mastermind.domain;
 
+import static com.cyeste.games.mastermind.domain.utils.BoardUtils.generateCode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -7,19 +8,16 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 import com.cyeste.games.mastermind.domain.Peg.Color;
 import com.cyeste.games.mastermind.domain.exception.InvalidOperationException;
-import static com.cyeste.games.mastermind.domain.utils.BoardUtils.*;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class BoardGameCreationTest {
 
@@ -93,9 +91,7 @@ public class BoardGameCreationTest {
 	@Test
 	public void gussMatchingOnlyColors() {
 		// given a guess
-		List<Peg> guessPegs = new LinkedList<Peg>(Arrays.asList(new Peg(Color.GREEN), new Peg(Color.BLUE),
-				new Peg(Color.YELLOW), new Peg(Peg.Color.GREEN)));
-		Pattern guess = new Pattern(guessPegs);
+		Pattern guess = generateCode(Color.GREEN,Color.BLUE, Color.YELLOW,Color.GREEN);
 
 		// when guess for once
 		GuessResult guessResult = board.guess(guess);
