@@ -27,9 +27,19 @@ public class PlayerCreationTest {
 		Player.builder().name("").build();
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void withNoId() {
+		Player.builder().name(DEFAULT_NAME).build();
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void withNullifiedId() {
+		Player.builder().name(DEFAULT_NAME).id(null).build();
+	}
+	
 	@Test
 	public void initialState() {
-		Player player = Player.builder().name(DEFAULT_NAME).build();
+		Player player = Player.builder().name(DEFAULT_NAME).id("id").build();
 		assertNotNull(player);
 		assertEquals(DEFAULT_NAME, player.getName());
 		LOGGER.info("Player: " + player);
