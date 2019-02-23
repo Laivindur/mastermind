@@ -8,10 +8,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -21,59 +19,47 @@ import com.cyeste.games.mastermind.domain.Peg.Color;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class PatternCreationTest {
 
-	private static final List<Peg> DEFAULT_PEGS = new LinkedList<Peg>();
-
-	@BeforeClass
-	public static void setUp() {
-		DEFAULT_PEGS.add(Peg.createPeg(Peg.Color.BLUE));
-		DEFAULT_PEGS.add(Peg.createPeg(Peg.Color.GREEN));
-		DEFAULT_PEGS.add(Peg.createPeg(Peg.Color.GREEN));
-		DEFAULT_PEGS.add(Peg.createPeg(Peg.Color.YELLOW));
-		assertFalse(DEFAULT_PEGS.isEmpty());
-		assertTrue(DEFAULT_PEGS.size() == 4);
-		System.out.println(Arrays.toString(DEFAULT_PEGS.toArray()));
-	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createPatternWithoutPegs() {
-		new Pattern(null);
+		Pattern.builder().build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void createPatternWithEmptyPegs() {
-		new Pattern(Collections.emptyList());
+	public void createPatternWithInvalidColor() {
+		Pattern.builder().addPeg("BLACK").build();
 	}
 
 	@Test
 	public void createdSuccessfully() {
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
 		assertNotNull(pattern);
-		assertEquals(DEFAULT_PEGS.size(), pattern.length());
+		assertEquals(4, pattern.length());
 	}
 
 	@Test
 	public void clonePattern() {
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
 		Pattern clone = pattern.clone();
 		assertFalse(pattern == clone);
 	}
 
 	@Test
 	public void hasPeg() {
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
 		assertTrue(pattern.hasPeg(Peg.createPeg(Peg.Color.BLUE)));
 		assertTrue(pattern.hasPeg(Peg.createPeg(Peg.Color.GREEN)));
 	}
 
 	@Test
 	public void matchingPostions() {
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
 		assertEquals(pattern.length(), pattern.matchingPegs((pattern)));
 	}
 
 	@Test
 	public void someMatchingsPosition() {
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
 		List<Peg> guessPegs = Arrays.asList(pattern.toArray());
 		Collections.reverse(guessPegs);
 		Pattern guess = generateCode(guessPegs.iterator());
@@ -82,14 +68,14 @@ public class PatternCreationTest {
 	
 	@Test
 	public void noMatchingPositions() {
-		Pattern pattern = new Pattern(DEFAULT_PEGS);		
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();		
 		Pattern guess =  generateCode(Color.CYAN, Color.PINK,Color.BROWN,Color.BLANK);
 		assertEquals(0, pattern.matchingPegs((guess)));
 	}
 	
 	@Test
 	public void noMatchingColorsDueToDifferentSet(){
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
 		Pattern guess =  generateCode(Color.CYAN, Color.PINK,Color.BROWN,Color.BLANK);
 		assertEquals(0, pattern.matchingPegColors(guess));
 
@@ -98,7 +84,7 @@ public class PatternCreationTest {
 	@Test
 	public void noMatchingColorsOutOfThePatternCodeRemainingPegs(){
 		//given : blue, green, green, yellow
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
 		// and ... blue, blue, brown, blank
 		Pattern guess =  generateCode(Color.BLUE, Color.BLUE,Color.BROWN,Color.BLANK);
 
@@ -110,7 +96,7 @@ public class PatternCreationTest {
 	@Test
 	public void matchingColorsDueToPatternCodeRemainingPegs(){
 		//given : blue, green, green, yellow
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
 		// and ... blue, green, brown, green
 		Pattern guess =  generateCode(Color.BLUE, Color.GREEN,Color.BROWN,Color.GREEN);
 			
@@ -122,7 +108,7 @@ public class PatternCreationTest {
 	@Test
 	public void noMatchingColorsDueToExactMachings(){
 		//given : blue, green, green, yellow
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
 		//then
 		//No matching colors are counted if pegs matched position
 		assertEquals(0, pattern.matchingPegColors(pattern));
@@ -133,7 +119,7 @@ public class PatternCreationTest {
 	@Test
 	public void countingColorsWithNoRepeats(){
 		//given : blue, green, green, yellow
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
 		Pattern guess =  generateCode(Color.GREEN, Color.BLUE,Color.YELLOW,Color.GREEN);
 
 		assertEquals(0, pattern.matchingPegs((guess)));
