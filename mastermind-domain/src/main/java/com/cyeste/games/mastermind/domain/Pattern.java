@@ -34,6 +34,10 @@ public class Pattern {
 	public boolean hasPeg(Peg peg) {
 		return pegs.contains(peg);
 	}
+	
+	public Peg[] toArray() {
+		return pegs.toArray(new Peg[] {});
+	}
 
 	/**
 	 * Matching pegs per position and color

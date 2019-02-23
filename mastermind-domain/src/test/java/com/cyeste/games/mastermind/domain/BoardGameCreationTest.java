@@ -19,32 +19,19 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 
 import com.cyeste.games.mastermind.domain.Peg.Color;
 import com.cyeste.games.mastermind.domain.exception.InvalidOperationException;
-
+import static com.cyeste.games.mastermind.domain.utils.BoardUtils.*;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class BoardGameCreationTest {
 
 	private final static Logger LOGGER = Logger.getLogger(BoardGameCreationTest.class.getName());
 	
 	private static final int DEFAULT_MAX_GAMES = 5;
-	private static final List<Peg> DEFAULT_PEGS = new LinkedList<Peg>();
-	private Pattern code;
+	private static final Pattern DEFAULT_CODE = generateCode(Peg.Color.BLUE, Peg.Color.GREEN, Peg.Color.GREEN,Peg.Color.YELLOW);
 	private DecodingBoard board;
-
-	@BeforeClass
-	public static void populateCodePegs() {
-		DEFAULT_PEGS.add(new Peg(Peg.Color.BLUE));
-		DEFAULT_PEGS.add(new Peg(Peg.Color.GREEN));
-		DEFAULT_PEGS.add(new Peg(Peg.Color.GREEN));
-		DEFAULT_PEGS.add(new Peg(Peg.Color.YELLOW));
-		assertFalse(DEFAULT_PEGS.isEmpty());
-		assertTrue(DEFAULT_PEGS.size() == 4);
-		LOGGER.info(Arrays.toString(DEFAULT_PEGS.toArray()));
-	}
-
+	
 	@Before
 	public void setUp() {
-		code = new Pattern(DEFAULT_PEGS);
-		board = new DecodingBoard(DEFAULT_MAX_GAMES, code);
+		board = new DecodingBoard(DEFAULT_MAX_GAMES, DEFAULT_CODE);
 	}
 
 	@Test
@@ -56,9 +43,9 @@ public class BoardGameCreationTest {
 	@Test
 	public void moreGamesAreAllowed() {
 		// given a guess
-		List<Peg> guessPegs = new LinkedList<Peg>(DEFAULT_PEGS);
+		List<Peg> guessPegs = Arrays.asList(DEFAULT_CODE.toArray());
 		Collections.reverse(guessPegs);
-		Pattern guess = new Pattern(guessPegs);
+		Pattern guess = generateCode(guessPegs.iterator());
 
 		// when guess for once
 		board.guess(guess);
@@ -70,9 +57,10 @@ public class BoardGameCreationTest {
 
 	@Test(expected = InvalidOperationException.class)
 	public void noMoreGamesAllowed() {
-		List<Peg> guessPegs = new LinkedList<Peg>(DEFAULT_PEGS);
+		List<Peg> guessPegs = Arrays.asList(DEFAULT_CODE.toArray());
 		Collections.reverse(guessPegs);
-		Pattern guess = new Pattern(guessPegs);
+		Pattern guess = generateCode(guessPegs.iterator());
+
 		for (int gameCount = 0; gameCount < DEFAULT_MAX_GAMES + 1; gameCount++) {
 			board.guess(guess);
 			LOGGER.info("Board: " + board.toString());
@@ -82,9 +70,10 @@ public class BoardGameCreationTest {
 	@Test
 	public void guessWithColorMatchingsAndPosotionsMatchings() {
 		// given a guess
-		List<Peg> guessPegs = new LinkedList<Peg>(DEFAULT_PEGS);
+		List<Peg> guessPegs = Arrays.asList(DEFAULT_CODE.toArray());
 		Collections.reverse(guessPegs);
-		Pattern guess = new Pattern(guessPegs);
+		Pattern guess = generateCode(guessPegs.iterator());
+
 
 		// when guess for once
 		GuessResult guessResult = board.guess(guess);
@@ -125,14 +114,14 @@ public class BoardGameCreationTest {
 	@Test
 	public void guessMatchesCode() {
 		// given
-		Pattern guess = new Pattern(DEFAULT_PEGS);
+		Pattern guess = DEFAULT_CODE;
 		// when guess for once
 		GuessResult guessResult = board.guess(guess);
 		LOGGER.info("GuessResult: " + guessResult.toString());
 
 		// then
 		assertNotNull(guessResult);
-		assertEquals(code.length(), guessResult.getColoredPegs());
+		assertEquals(DEFAULT_CODE.length(), guessResult.getColoredPegs());
 		assertEquals(0, guessResult.getWhitePegs());
 		assertTrue(guessResult.isExactMatch());
 		assertFalse(board.leftGames());

@@ -23,8 +23,7 @@ public class DecodingBoard {
 
 	public DecodingBoard(int maxGameSize, Pattern code) {
 		Validations.whenNull(code).throwIllegalArgumentException("DecodingBoard's code is required");
-		Validations.when(maxGameSize <= 0)
-				.throwIllegalArgumentException("DecodingBoard max games size must be greater than 0");
+		Validations.when(maxGameSize <= 0).throwIllegalArgumentException("DecodingBoard max games size must be greater than 0");
 		this.code = code;
 		this.games = new ArrayList<GuessResult>(maxGameSize);
 		this.maxGamesSize = maxGameSize;

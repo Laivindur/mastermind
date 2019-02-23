@@ -1,5 +1,6 @@
 package com.cyeste.games.mastermind.domain;
 
+import static com.cyeste.games.mastermind.domain.utils.BoardUtils.generateCode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -73,29 +74,23 @@ public class PatternCreationTest {
 	@Test
 	public void someMatchingsPosition() {
 		Pattern pattern = new Pattern(DEFAULT_PEGS);
-		List<Peg> alternativePegList = new LinkedList<>(DEFAULT_PEGS);
-		Collections.reverse(alternativePegList);
-		Pattern guess = new Pattern(alternativePegList);
+		List<Peg> guessPegs = Arrays.asList(pattern.toArray());
+		Collections.reverse(guessPegs);
+		Pattern guess = generateCode(guessPegs.iterator());
 		assertEquals(2, pattern.matchingPegs((guess)));
 	}
 	
 	@Test
 	public void noMatchingPositions() {
-		Pattern pattern = new Pattern(DEFAULT_PEGS);
-		List<Peg> alternativePegList = new LinkedList<Peg>(Arrays.asList(new Peg(Color.CYAN), new Peg(Color.PINK),
-				new Peg(Color.BROWN), new Peg(Peg.Color.BLANK)));
-		
-		Pattern guess = new Pattern(alternativePegList);
+		Pattern pattern = new Pattern(DEFAULT_PEGS);		
+		Pattern guess =  generateCode(Color.CYAN, Color.PINK,Color.BROWN,Color.BLANK);
 		assertEquals(0, pattern.matchingPegs((guess)));
 	}
 	
 	@Test
 	public void noMatchingColorsDueToDifferentSet(){
 		Pattern pattern = new Pattern(DEFAULT_PEGS);
-		List<Peg> alternativePegList = new LinkedList<Peg>(Arrays.asList(new Peg(Color.CYAN), new Peg(Color.PINK),
-				new Peg(Color.BROWN), new Peg(Peg.Color.BLANK)));
-		
-		Pattern guess = new Pattern(alternativePegList);
+		Pattern guess =  generateCode(Color.CYAN, Color.PINK,Color.BROWN,Color.BLANK);
 		assertEquals(0, pattern.matchingPegColors(guess));
 
 	}
@@ -105,11 +100,8 @@ public class PatternCreationTest {
 		//given : blue, green, green, yellow
 		Pattern pattern = new Pattern(DEFAULT_PEGS);
 		// and ... blue, blue, brown, blank
-		List<Peg> alternativePegList = new LinkedList<Peg>(Arrays.asList(new Peg(Color.BLUE), new Peg(Color.BLUE),
-				new Peg(Color.BROWN), new Peg(Peg.Color.BLANK)));
-		
-		Pattern guess = new Pattern(alternativePegList);
-		
+		Pattern guess =  generateCode(Color.BLUE, Color.BLUE,Color.BROWN,Color.BLANK);
+
 		//then
 		//2nd Blue is not counted because after matching position[0]=blue, there's no other position[n] = blue
 		assertEquals(0, pattern.matchingPegColors(guess));
@@ -120,11 +112,8 @@ public class PatternCreationTest {
 		//given : blue, green, green, yellow
 		Pattern pattern = new Pattern(DEFAULT_PEGS);
 		// and ... blue, green, brown, green
-		List<Peg> alternativePegList = new LinkedList<Peg>(Arrays.asList(new Peg(Color.BLUE), new Peg(Color.GREEN),
-				new Peg(Color.BROWN), new Peg(Peg.Color.GREEN)));
-		
-		Pattern guess = new Pattern(alternativePegList);
-		
+		Pattern guess =  generateCode(Color.BLUE, Color.GREEN,Color.BROWN,Color.GREEN);
+			
 		//then
 		//2nd Green is counted because after matching position[1]=green, there's yet position[2] = green
 		assertEquals(1, pattern.matchingPegColors(guess));
@@ -144,11 +133,9 @@ public class PatternCreationTest {
 	@Test
 	public void countingColorsWithNoRepeats(){
 		//given : blue, green, green, yellow
-		Pattern pattern = new Pattern(DEFAULT_PEGS);				
-		List<Peg> alternativePegList = new LinkedList<Peg>(Arrays.asList(new Peg(Color.GREEN), new Peg(Color.BLUE),
-				new Peg(Color.YELLOW), new Peg(Peg.Color.GREEN)));
-				Collections.reverse(alternativePegList);
-		Pattern guess = new Pattern(alternativePegList);
+		Pattern pattern = new Pattern(DEFAULT_PEGS);
+		Pattern guess =  generateCode(Color.GREEN, Color.BLUE,Color.YELLOW,Color.GREEN);
+
 		assertEquals(0, pattern.matchingPegs((guess)));
 		assertEquals(3, pattern.matchingPegColors((guess)));
 
