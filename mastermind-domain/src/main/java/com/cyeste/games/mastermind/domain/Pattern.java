@@ -1,5 +1,8 @@
 package com.cyeste.games.mastermind.domain;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 /**
  * 
  * @author Christian Yeste Vidal
@@ -7,16 +10,17 @@ package com.cyeste.games.mastermind.domain;
  */
 public class Pattern {
 
-	public Pattern() {
-		// TODO Auto-generated constructor stub
+	private final Set<Peg> pegs;
+	
+	public Pattern(Set<Peg> pegs) {
+		this.pegs = new LinkedHashSet<Peg>(pegs);
 	}
 	
 	public Pattern clone() {
-		return new Pattern();
+		return new Pattern(new LinkedHashSet<Peg>(pegs));
 	}
 
 	public int length() {
-		// TODO Auto-generated method stub
-		return-1;
+		return pegs.size();
 	}
 }
