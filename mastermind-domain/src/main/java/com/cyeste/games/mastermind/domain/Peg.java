@@ -25,6 +25,9 @@ public class Peg {
 				(this == peg || color.equals(Peg.class.cast(peg).color));
 	}
 	
+	public Color getColor() {
+		return color;
+	}
 
 	/*
 	 *For us to use Hashed data structures such as LinkedHashSet<> or LinkedHashMap<> 
