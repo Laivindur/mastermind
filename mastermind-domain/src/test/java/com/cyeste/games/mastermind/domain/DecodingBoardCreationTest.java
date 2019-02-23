@@ -10,25 +10,30 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 @RunWith(BlockJUnit4ClassRunner.class)
-public class BoardGameGuessTest {
+public class DecodingBoardCreationTest {
 	
 	private static final Pattern DEFAULT_CODE = generateCode(Peg.Color.BLUE, Peg.Color.GREEN, Peg.Color.GREEN,Peg.Color.YELLOW);
 	
-
+	
 	@Test(expected=IllegalArgumentException.class)
-	public void createdWithNoGames() {
-		new DecodingBoard(0, null);
+	public void createWithNegativeMaxGAmesSize() {
+		DecodingBoard.createBoard("id", -1, DEFAULT_CODE);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void createdWithNullPatern() {
-		new DecodingBoard(1, null);
+	public void createWithNoCode() {
+		DecodingBoard.createBoard("id", 1, null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void createWithNoId() {
+		DecodingBoard.createBoard(null, 1, DEFAULT_CODE);
 	}
 	
 	@Test
 	public void initialTest() {
 		//given
-		DecodingBoard board = new DecodingBoard(1, DEFAULT_CODE );
+		DecodingBoard board = DecodingBoard.createBoard("id", 1, DEFAULT_CODE);
 		
 		//then
 		assertFalse( board.isSolved());

@@ -12,7 +12,7 @@ public class Peg {
 	private final Color color;
 	private static final String TO_STRING = "{color: \"%s\"}";
 	
-	public Peg(Color color) {
+	private Peg(Color color) {
 		Validations.whenNull(color).throwIllegalArgumentException("Peg's color is required");
 		this.color = color;		
 	}
@@ -28,6 +28,17 @@ public class Peg {
 	
 	public Color getColor() {
 		return color;
+	}
+	
+	public static Peg createPeg(Color color) {
+		return new Peg(color);
+	}
+	
+	public static Peg createPeg(String colorCode) {
+		Color color = Color.valueOf(colorCode);
+		Validations.whenNull(color).throwIllegalArgumentException("Color "+ color + " is not supported");
+		return new Peg(color);
+		
 	}
 
 	/*

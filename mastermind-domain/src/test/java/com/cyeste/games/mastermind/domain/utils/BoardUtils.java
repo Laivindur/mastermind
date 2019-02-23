@@ -2,11 +2,10 @@ package com.cyeste.games.mastermind.domain.utils;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import com.cyeste.games.mastermind.domain.DecodingBoard;
 import com.cyeste.games.mastermind.domain.Pattern;
+import com.cyeste.games.mastermind.domain.Pattern.PatternBuilder;
 import com.cyeste.games.mastermind.domain.Peg;
 
 public final class BoardUtils {
@@ -16,30 +15,30 @@ public final class BoardUtils {
 	}
 
 	public static Pattern generateCode(Peg.Color... colors) {
-		List<Peg> codePegs = new LinkedList<Peg>();
-		Arrays.stream(colors).forEach(color -> codePegs.add(new Peg(color)));
-		return new Pattern(codePegs);
+		PatternBuilder builder = Pattern.builder();
+		Arrays.stream(colors).forEach(color -> builder.addPeg(color));
+		return builder.build();
 	}
 	
 	public static Pattern generateCode(Peg... pegs) {
-		List<Peg> codePegs = new LinkedList<Peg>();
-		Arrays.stream(pegs).forEach(peg -> codePegs.add(peg));
-		return new Pattern(codePegs);
+		PatternBuilder builder = Pattern.builder();
+		Arrays.stream(pegs).forEach(peg -> builder.addPeg(peg));
+		return builder.build();
 	}
 	
 	public static Pattern generateCode(Iterator<Peg> pegs) {
-		List<Peg> codePegs = new LinkedList<Peg>();
+		PatternBuilder builder = Pattern.builder();
 		while(pegs.hasNext()) {
-			codePegs.add(pegs.next());
+			builder.addPeg(pegs.next());
 		}
-		return new Pattern(codePegs);
+		return builder.build();
 	}
 	
 	public static DecodingBoard generateBoard(Peg... pegs) {
-		return new DecodingBoard(DEFAULT_MAX_GAMES_PER_BOARD, generateCode(pegs));
+		return DecodingBoard.createBoard("id", DEFAULT_MAX_GAMES_PER_BOARD, generateCode(pegs));
 	}
 	
 	public static DecodingBoard generateBoard(Peg.Color... colors) {
-		return new DecodingBoard(DEFAULT_MAX_GAMES_PER_BOARD, generateCode(colors));
+		return DecodingBoard.createBoard("id",DEFAULT_MAX_GAMES_PER_BOARD, generateCode(colors));
 	}
 }

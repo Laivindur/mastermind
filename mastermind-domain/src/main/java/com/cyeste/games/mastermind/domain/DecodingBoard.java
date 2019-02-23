@@ -1,5 +1,6 @@
 package com.cyeste.games.mastermind.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,19 +16,23 @@ import com.cyeste.games.mastermind.domain.utils.Validations;
  */
 public class DecodingBoard {
 
-	private static final String TO_STRING = "{maxGamesSize : %d, code: %s, games: %s, solved: %s}";
+	private static final String TO_STRING = "{id: \"%s\", maxGamesSize : %d, code: %s, games: %s, solved: %s}";
+	private final Serializable id;
 	private final int maxGamesSize;
 	private final Pattern code;
 	private final Collection<GuessResult> games;
 	private boolean solved;
 
-	public DecodingBoard(int maxGameSize, Pattern code) {
-		Validations.whenNull(code).throwIllegalArgumentException("DecodingBoard's code is required");
-		Validations.when(maxGameSize <= 0).throwIllegalArgumentException("DecodingBoard max games size must be greater than 0");
+	private DecodingBoard(Serializable id, int maxGameSize, Pattern code) {
+		this.id = id;
 		this.code = code;
 		this.games = new ArrayList<GuessResult>(maxGameSize);
 		this.maxGamesSize = maxGameSize;
 		solved = false;
+	}
+	
+	public Serializable getId() {
+		return id;
 	}
 
 	public GuessResult guess(Pattern guess) {
@@ -55,9 +60,16 @@ public class DecodingBoard {
 	public Pattern getCode() {
 		return code;
 	}
+	
+	public static DecodingBoard createBoard(Serializable id, int maxGameSize, Pattern code) {
+		Validations.whenNull(code).throwIllegalArgumentException("DecodingBoard's code is required");
+		Validations.when(maxGameSize <= 0).throwIllegalArgumentException("DecodingBoard max games size must be greater than 0");
+		Validations.whenNull(id).throwIllegalArgumentException("DecodingBoard id is required");
+		return new DecodingBoard(id, maxGameSize, code);
+	}
 
 	@Override
 	public String toString() {
-		return String.format(TO_STRING, maxGamesSize, code, Arrays.deepToString(games.toArray()), String.valueOf(solved));
+		return String.format(TO_STRING, id.toString(), maxGamesSize, code, Arrays.deepToString(games.toArray()), String.valueOf(solved));
 	}
 }
