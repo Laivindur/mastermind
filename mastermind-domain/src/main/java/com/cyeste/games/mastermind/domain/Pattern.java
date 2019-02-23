@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.cyeste.games.mastermind.domain.Peg.Color;
 import com.cyeste.games.mastermind.domain.utils.Validations;
 
 /**
@@ -18,8 +19,7 @@ public class Pattern {
 	private final List<Peg> pegs;
 	private static final String TO_STRING = "{pegs:%s}";
 
-	public Pattern(List<Peg> pegs) {
-		Validations.whenEmpty(pegs).throwIllegalArgumentException("Pattern's Peg set is required");
+	private Pattern(List<Peg> pegs) {
 		this.pegs = new LinkedList<Peg>(pegs);
 	}
 
@@ -81,5 +81,36 @@ public class Pattern {
 	@Override
 	public String toString() {
 		return String.format(TO_STRING, Arrays.toString(pegs.toArray()));
+	}
+	
+	public static PatternBuilder builder() {
+		return new PatternBuilder();
+	}
+	
+	public static class PatternBuilder{
+		private List<Peg> pegs;
+		
+		PatternBuilder(){
+			pegs = new LinkedList<Peg>();
+		}
+		
+		public PatternBuilder addPeg(Peg peg) {
+			Validations.whenNull(peg).throwIllegalArgumentException("Null Pegs can not be added to the pattern");
+			pegs.add(peg);
+			return this;
+		}
+		
+		public PatternBuilder addPeg(Color color) {
+			return addPeg(Peg.createPeg(color));			
+		}
+		
+		public PatternBuilder addPeg(String color) {
+			return addPeg(Peg.createPeg(color));
+		}
+		
+		public Pattern build() {
+			Validations.whenEmpty(pegs).throwIllegalArgumentException("Pattern's Peg set is required");
+			return new Pattern(pegs);
+		}
 	}
 }
