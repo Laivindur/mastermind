@@ -12,7 +12,7 @@ import com.cyeste.games.mastermind.domain.DecodingBoard;
  */
 public interface DecodingBoardsRepository {
 
-	Serializable addBoard(DecodingBoard board);
+	void store(DecodingBoard board);
 	
 	Collection<DecodingBoard> getAllBoards();
 	
