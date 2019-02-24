@@ -8,6 +8,7 @@
 ## Architecutre
 
 I have tried to follow Clean Architecture premisses for the project's composition and structure. Encapsulation, cohesion and decoupling
+
 I have tried to follow DDD techniques to implement the domain model.
 
 **Disclaimers** : Mastermind-adapter module should provide with more decoupling. Right now it allows upper layers to be aware of too many domain's
