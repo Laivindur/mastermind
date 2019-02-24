@@ -2,6 +2,8 @@ package com.cyeste.games.mastermind.adapters.generator;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
 import com.cyeste.games.mastermind.domain.port.IdGenerator;
 
 /**
@@ -11,6 +13,7 @@ import com.cyeste.games.mastermind.domain.port.IdGenerator;
  * @author Christian Yeste Vidal
  *
  */
+@Component("uuidGenerator")
 public class UUIDGenerator implements IdGenerator<String> {
 
 	@Override

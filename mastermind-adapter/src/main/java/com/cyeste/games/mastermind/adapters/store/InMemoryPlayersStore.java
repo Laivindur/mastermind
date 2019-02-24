@@ -3,6 +3,8 @@ package com.cyeste.games.mastermind.adapters.store;
 import java.io.Serializable;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import com.cyeste.games.mastermind.domain.Player;
 import com.cyeste.games.mastermind.domain.port.PlayersRepository;
 
@@ -16,6 +18,7 @@ import com.cyeste.games.mastermind.domain.port.PlayersRepository;
  * @author Christian Yeste Vidal
  *
  */
+@Repository("inMemoryPlayersStore")
 public class InMemoryPlayersStore extends AbstractInMemoryStore implements PlayersRepository {
 	
 		

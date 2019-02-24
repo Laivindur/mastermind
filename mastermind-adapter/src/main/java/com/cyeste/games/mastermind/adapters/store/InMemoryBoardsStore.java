@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Repository;
+
 import com.cyeste.games.mastermind.domain.DecodingBoard;
 import com.cyeste.games.mastermind.domain.port.DecodingBoardsRepository;
 
@@ -18,6 +20,7 @@ import com.cyeste.games.mastermind.domain.port.DecodingBoardsRepository;
  * @author Christian Yeste Vidal
  *
  */
+@Repository("inMemoryBoardsStore")
 public class InMemoryBoardsStore extends AbstractInMemoryStore implements DecodingBoardsRepository{
 
 	public InMemoryBoardsStore() {

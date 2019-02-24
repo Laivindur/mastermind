@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Repository;
+
 import com.cyeste.games.mastermind.domain.DecodingBoard;
 import com.cyeste.games.mastermind.domain.Player;
 import com.cyeste.games.mastermind.domain.PlayerBoard;
@@ -22,6 +24,7 @@ import com.cyeste.games.mastermind.domain.port.PlayerBoardsRepository;
  * @author Christian Yeste Vidal
  *
  */
+@Repository("inPlayersAndBoardsStore")
 public class InPlayersAndBoardsStore extends AbstractInMemoryStore implements PlayerBoardsRepository {
 	
 		
