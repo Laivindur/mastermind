@@ -1,8 +1,7 @@
 package com.cyeste.games.mastermind.adapters.store;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 import com.cyeste.games.mastermind.domain.Player;
 import com.cyeste.games.mastermind.domain.port.PlayersRepository;
@@ -17,23 +16,26 @@ import com.cyeste.games.mastermind.domain.port.PlayersRepository;
  * @author Christian Yeste Vidal
  *
  */
-public class InMemoryPlayersStore implements PlayersRepository {
+public class InMemoryPlayersStore extends AbstractInMemoryStore implements PlayersRepository {
 	
-	private final Map<Serializable,Player> datasource;
-	
+		
 	public InMemoryPlayersStore() {
-		datasource = new HashMap<Serializable, Player>();
+		super();
 	}
 
 	@Override
 	public void store(Player player) {
-		datasource.put(player.getId(), player);
+		getDatasource().put(player.getId(), player);
 
 	}
 
 	@Override
 	public Player findPlayer(Serializable id) {
-		return datasource.get(id);
+		Optional<Object> entity = Optional.ofNullable(getDatasource().get(id));
+		if(entity.isPresent()) {
+			return Player.class.cast(entity.get());
+		}
+		return null;
 	}
 
 }
