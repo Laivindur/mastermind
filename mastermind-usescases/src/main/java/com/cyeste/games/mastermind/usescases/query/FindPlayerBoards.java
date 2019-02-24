@@ -10,27 +10,27 @@ import com.cyeste.games.mastermind.domain.port.PlayerBoardsRepository;
 
 public class FindPlayerBoards {
 
-	private final PlayerBoardsRepository playerBoardsRepository;
+	private final PlayerBoardsRepository store;
 
-	public FindPlayerBoards(PlayerBoardsRepository playerBoardsRepository) {
+	public FindPlayerBoards(PlayerBoardsRepository store) {
 		super();
-		this.playerBoardsRepository = playerBoardsRepository;
+		this.store = store;
 	}
 	
 	public Iterator<PlayerBoard> findAllPlayersBoard(Player player) {
-		return playerBoardsRepository.findBoards(player).iterator();
+		return store.findBoards(player).iterator();
 	}
 	
 	public Iterator<PlayerBoard> findAllBoardsPlayers(DecodingBoard board) {
-		return playerBoardsRepository.findPlayers(board).iterator();
+		return store.findPlayers(board).iterator();
 	}
 	
 	public PlayerBoard findById(Serializable id) {
-		return playerBoardsRepository.findById(id);
+		return store.findById(id);
 	}
 	
 	public PlayerBoard findPlayerBoard(Player player, DecodingBoard board) {
-		return playerBoardsRepository.findPlayerBoard(player, board);
+		return store.findPlayerBoard(player, board);
 	}
 	
 	

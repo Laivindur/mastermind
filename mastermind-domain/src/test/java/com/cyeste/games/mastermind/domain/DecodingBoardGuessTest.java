@@ -43,7 +43,7 @@ public class DecodingBoardGuessTest {
 	@Test
 	public void moreGamesAreAllowed() {
 		// given a guess
-		List<Peg> guessPegs = Arrays.asList(DEFAULT_CODE.toArray());
+		List<Peg> guessPegs = Arrays.asList(DEFAULT_CODE.toPegArray());
 		Collections.reverse(guessPegs);
 		Pattern guess = generateCode(guessPegs.iterator());
 
@@ -57,7 +57,7 @@ public class DecodingBoardGuessTest {
 
 	@Test(expected = InvalidOperationException.class)
 	public void noMoreGamesAllowed() {
-		List<Peg> guessPegs = Arrays.asList(DEFAULT_CODE.toArray());
+		List<Peg> guessPegs = Arrays.asList(DEFAULT_CODE.toPegArray());
 		Collections.reverse(guessPegs);
 		Pattern guess = generateCode(guessPegs.iterator());
 
@@ -70,7 +70,7 @@ public class DecodingBoardGuessTest {
 	@Test
 	public void guessWithColorMatchingsAndPosotionsMatchings() {
 		// given a guess
-		List<Peg> guessPegs = Arrays.asList(DEFAULT_CODE.toArray());
+		List<Peg> guessPegs = Arrays.asList(DEFAULT_CODE.toPegArray());
 		Collections.reverse(guessPegs);
 		Pattern guess = generateCode(guessPegs.iterator());
 

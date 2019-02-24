@@ -35,10 +35,13 @@ public class Pattern {
 		return pegs.contains(peg);
 	}
 	
-	public Peg[] toArray() {
+	public Peg[] toPegArray() {
 		return pegs.toArray(new Peg[] {});
 	}
 
+	public String[] toStringArray() {
+		return pegs.stream().map(Peg::getColor).map(Color::name).toArray(String[]::new);
+	}
 	/**
 	 * Matching pegs per position and color
 	 * @param pattern
@@ -82,6 +85,8 @@ public class Pattern {
 	public String toString() {
 		return String.format(TO_STRING, Arrays.toString(pegs.toArray()));
 	}
+	
+	
 	
 	public static PatternBuilder builder() {
 		return new PatternBuilder();

@@ -8,17 +8,17 @@ import com.cyeste.games.mastermind.domain.port.PlayersRepository;
 
 public class CreatePlayer {
 
-	private final PlayersRepository repository;
+	private final PlayersRepository store;
 	private final IdGenerator<Serializable> idGenerator;
 	
 	public CreatePlayer(PlayersRepository repository, IdGenerator<Serializable> idGenerator) {
-		this.repository = repository;
+		this.store = repository;
 		this.idGenerator = idGenerator;
 	}
 	
 	public Player create(String name) {
 		Player player = Player.builder().id(idGenerator.generate()).name(name).build();
-		repository.store(player);
+		store.store(player);
 		return player;
 	}
 }

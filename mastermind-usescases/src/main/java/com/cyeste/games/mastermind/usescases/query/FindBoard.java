@@ -8,17 +8,17 @@ import com.cyeste.games.mastermind.domain.port.DecodingBoardsRepository;
 
 public class FindBoard {
 
-	private DecodingBoardsRepository repository;
+	private DecodingBoardsRepository store;
 
-	public FindBoard(DecodingBoardsRepository repository) {
-		this.repository = repository;
+	public FindBoard(DecodingBoardsRepository store) {
+		this.store = store;
 	}
 	
 	public DecodingBoard find(Serializable id) {
-		return repository.findBoardById(id);
+		return store.findBoardById(id);
 	}
 	
 	public Iterator<DecodingBoard> findAll(){
-		return repository.getAllBoards().iterator();
+		return store.getAllBoards().iterator();
 	}
 }
