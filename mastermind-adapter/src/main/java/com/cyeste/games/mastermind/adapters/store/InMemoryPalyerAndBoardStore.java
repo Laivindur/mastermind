@@ -25,10 +25,10 @@ import com.cyeste.games.mastermind.domain.port.PlayerBoardsRepository;
  *
  */
 @Repository("inPlayersAndBoardsStore")
-public class InPlayersAndBoardsStore extends AbstractInMemoryStore implements PlayerBoardsRepository {
+public class InMemoryPalyerAndBoardStore extends AbstractInMemoryStore implements PlayerBoardsRepository {
 	
 		
-	public InPlayersAndBoardsStore() {
+	public InMemoryPalyerAndBoardStore() {
 		super();
 	}
 

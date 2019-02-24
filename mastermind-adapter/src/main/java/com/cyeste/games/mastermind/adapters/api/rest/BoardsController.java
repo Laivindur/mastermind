@@ -1,17 +1,35 @@
 package com.cyeste.games.mastermind.adapters.api.rest;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import com.cyeste.games.mastermind.adapters.api.rest.command.PlayerCodeInput;
+import com.cyeste.games.mastermind.adapters.api.rest.command.PlayerGuessInput;
+import com.cyeste.games.mastermind.adapters.api.rest.exception.ResourceNotFoundException;
+import com.cyeste.games.mastermind.adapters.api.rest.resources.BoardResource;
+import com.cyeste.games.mastermind.adapters.api.rest.resources.PlayerResource;
+import com.cyeste.games.mastermind.domain.DecodingBoard;
+import com.cyeste.games.mastermind.domain.Player;
+import com.cyeste.games.mastermind.domain.PlayerBoard;
 import com.cyeste.games.mastermind.usescases.command.CreateBoard;
+import com.cyeste.games.mastermind.usescases.command.GuessBoard;
+import com.cyeste.games.mastermind.usescases.command.JoinBoard;
 import com.cyeste.games.mastermind.usescases.query.FindBoard;
+import com.cyeste.games.mastermind.usescases.query.FindPlayer;
 import com.cyeste.games.mastermind.usescases.query.FindPlayerBoards;
 
 /**
@@ -23,41 +41,81 @@ import com.cyeste.games.mastermind.usescases.query.FindPlayerBoards;
 @RequestMapping(value = "/boards", produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 public class BoardsController {
 
+	private FindPlayer findPlayerUseCaseHandler;
 	private FindBoard findBoardUseCaseHandler;
-	private FindPlayerBoards findBoardsUseCaseHandler;
 	private CreateBoard createBoardUseCaseHandler;
+	private JoinBoard joinBoardUseCaseHandler;
+	private GuessBoard guessBoardUseCaseHandler;
 	
 	
 	@Autowired
-	public BoardsController(FindBoard findBoardUseCaseHandler, FindPlayerBoards findBoardsUseCaseHandler,
-			CreateBoard createBoardUseCaseHandler) {
+	public BoardsController(
+			FindPlayer findPlayerUseCaseHandler,
+			FindBoard findBoardUseCaseHandler, 
+			FindPlayerBoards findPlayersBoardsUseCaseHandler,
+			CreateBoard createBoardUseCaseHandler,
+			JoinBoard joinBoardUseCaseHandler,
+			GuessBoard guessBoardUseCaseHandler) {
+		this.findPlayerUseCaseHandler = findPlayerUseCaseHandler;
 		this.findBoardUseCaseHandler = findBoardUseCaseHandler;
-		this.findBoardsUseCaseHandler = findBoardsUseCaseHandler;
 		this.createBoardUseCaseHandler = createBoardUseCaseHandler;
+		this.joinBoardUseCaseHandler = joinBoardUseCaseHandler;
+		this.guessBoardUseCaseHandler = guessBoardUseCaseHandler;
 	}
 	
 	@RequestMapping( method = RequestMethod.GET)
-	public ResponseEntity<ResourceSupport> findAll() {
-		throw new UnsupportedOperationException();
+	@ResponseBody
+	public ResponseEntity<List<BoardResource>> all() {
+		Iterator<DecodingBoard> boards = findBoardUseCaseHandler.findAll();
+		List<BoardResource> resources = new LinkedList<BoardResource>();
+		while(boards.hasNext()) {
+			resources.add(BoardResource.toResource(boards.next()));
+		}
+		return ResponseEntity.ok(resources);
 	}
 	
 	@RequestMapping(value = "/{boardId}", method = RequestMethod.GET)
-	public ResponseEntity<ResourceSupport> find(@PathVariable("boardId") final String boardId) {
-		throw new UnsupportedOperationException();
+	@ResponseBody
+	public ResponseEntity<BoardResource> find(@PathVariable("boardId") final String boardId) {
+		DecodingBoard board = findBoardUseCaseHandler.find(boardId);
+		if (board != null) {
+			return ResponseEntity.ok(BoardResource.toResource(board));
+		}
+		throw new ResourceNotFoundException(BoardResource.class, boardId);
+		
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ResponseEntity<ResourceSupport> create(
-			@RequestParam("codeMakerId") final String codeMakerId,
-			@RequestParam("code")  final String[] code) {
-		throw new UnsupportedOperationException();
+	@ResponseBody
+	public ResponseEntity<BoardResource> create(@RequestBody @Valid final PlayerCodeInput input, UriComponentsBuilder uriBuiilder) {
+		//XXX Dada la implicación de varios boundaries, deberíamos mover esto a un servicio de aplicación
+		Player codeMaker = findPlayerUseCaseHandler.find(input.getCodeMakerId());
+		if (codeMaker != null) {
+			DecodingBoard board = createBoardUseCaseHandler.create(input.getCode());
+			PlayerBoard join = joinBoardUseCaseHandler.joinAsCodeMaker(codeMaker, board);			
+			return ResponseEntity.ok(BoardResource.toResource(join));
+		}
+		throw new ResourceNotFoundException(PlayerResource.class, input.getCodeMakerId());
+		
+		
+		
 	}
 	
 	@RequestMapping(value = "/{boardId}/boards/guess", method = RequestMethod.PUT)
-	public ResponseEntity<ResourceSupport> boardPlayers(
-			@PathVariable("codeBreakerId") final String codeBreakerId,
-			@PathVariable("boardId") final String boardId,
-			@RequestParam("guess") final String[] guess) {
-		throw new UnsupportedOperationException();
+	@ResponseBody
+	public ResponseEntity<BoardResource> guess(@RequestBody @Valid final PlayerGuessInput input, UriComponentsBuilder uriBuiilder) {
+		
+		Player codeBreaker = findPlayerUseCaseHandler.find(input.getCodeBreakerId());
+		if (codeBreaker != null) {
+			throw new ResourceNotFoundException(PlayerResource.class, input.getCodeBreakerId());
+		}
+		DecodingBoard board = findBoardUseCaseHandler.find(input.getBoardId());
+		if (board != null) {
+			throw new ResourceNotFoundException(BoardResource.class, input.getBoardId());
+		}
+		PlayerBoard join = joinBoardUseCaseHandler.joinAsCodeBreaker(codeBreaker, board);
+		guessBoardUseCaseHandler.guess(join, input.getGuess());
+		return ResponseEntity.ok(BoardResource.toResource(join));
+		
 	}
 }

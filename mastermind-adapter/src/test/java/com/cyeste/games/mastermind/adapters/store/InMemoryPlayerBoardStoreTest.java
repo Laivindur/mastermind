@@ -42,7 +42,7 @@ public class InMemoryPlayerBoardStoreTest {
 	
 	@Before
 	public void setUp() {
-		repository = new InPlayersAndBoardsStore();
+		repository = new InMemoryPalyerAndBoardStore();
 	}
 	
 	@Test

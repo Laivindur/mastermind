@@ -1,15 +1,24 @@
 package com.cyeste.games.mastermind.adapters.api.rest;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cyeste.games.mastermind.adapters.api.rest.exception.ResourceNotFoundException;
+import com.cyeste.games.mastermind.adapters.api.rest.resources.BoardResource;
+import com.cyeste.games.mastermind.adapters.api.rest.resources.PlayerResource;
+import com.cyeste.games.mastermind.domain.Player;
+import com.cyeste.games.mastermind.domain.PlayerBoard;
 import com.cyeste.games.mastermind.usescases.command.CreatePlayer;
 import com.cyeste.games.mastermind.usescases.query.FindPlayer;
 import com.cyeste.games.mastermind.usescases.query.FindPlayerBoards;
@@ -20,14 +29,13 @@ import com.cyeste.games.mastermind.usescases.query.FindPlayerBoards;
  *
  */
 @RestController("playersController")
-@RequestMapping(value = "/players", produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
+@RequestMapping(value = "/players", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 public class PlayersController {
 
 	private FindPlayer findPlayerUseCasehandler;
 	private FindPlayerBoards findBoardsUseCasehandler;
 	private CreatePlayer createUserUseCasehandler;
-	
-	
+
 	@Autowired
 	public PlayersController(FindPlayer findPlayerUseCasehandler, FindPlayerBoards findBoardsUseCasehandler,
 			CreatePlayer createUserUseCasehandler) {
@@ -37,27 +45,34 @@ public class PlayersController {
 	}
 
 	@RequestMapping(value = "/{playerId}", method = RequestMethod.GET)
-	public ResponseEntity<ResourceSupport> find(@PathVariable("playerId") final String playerId) {
-		throw new UnsupportedOperationException();
+	@ResponseBody
+	public ResponseEntity<PlayerResource> find(@PathVariable("playerId") final String playerId) {
+		Player player = findPlayerUseCasehandler.find(playerId);
+		if (player != null) {
+			return ResponseEntity.ok(PlayerResource.toResource(player));
+		}
+		throw new ResourceNotFoundException(PlayerResource.class, playerId);
 	}
-	
+
 	@RequestMapping(value = "/{playerId}/boards/", method = RequestMethod.GET)
-	public ResponseEntity<ResourceSupport> playerBoards(@PathVariable("playerId") final String playerId) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@RequestMapping(value = "/{playerId}/boards-as-codemaker/", method = RequestMethod.GET)
-	public ResponseEntity<ResourceSupport> playerBoardsAsCodeMaker(@PathVariable("playerId") final String playerId) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@RequestMapping(value = "/{playerId}/boards-as-codebreaker/", method = RequestMethod.GET)
-	public ResponseEntity<ResourceSupport> playerBoardsAsCodeBreaker(@PathVariable("playerId") final String playerId) {
-		throw new UnsupportedOperationException();
+	@ResponseBody
+	public ResponseEntity<List<BoardResource>> playerBoards(@PathVariable("playerId") final String playerId) {
+		Player player = findPlayerUseCasehandler.find(playerId);
+		if (player == null) {
+			throw new ResourceNotFoundException(PlayerResource.class, playerId);
+		}
+		List<BoardResource> resources = new LinkedList<BoardResource>();
+		Iterator<PlayerBoard> playerBoards = findBoardsUseCasehandler.findAllPlayersBoard(player);
+		while (playerBoards.hasNext()) {
+			resources.add(BoardResource.toResource(playerBoards.next()));
+		}
+		return ResponseEntity.ok(resources);
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ResponseEntity<ResourceSupport> create(@RequestParam("name") final String userName) {
-		throw new UnsupportedOperationException();
+	@ResponseBody
+	public ResponseEntity<PlayerResource> create(@RequestParam("name") final String userName) {
+		Player player = createUserUseCasehandler.create(userName);
+		return ResponseEntity.ok(PlayerResource.toResource(player));
 	}
 }

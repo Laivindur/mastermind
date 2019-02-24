@@ -16,11 +16,11 @@ public class JoinBoard {
 	//TODO : Parametrizar esto
 	private static final int DEFAULT_MAX_PLAYERS_PER_BOARD = 2;
 	
-	private final PlayerBoardsRepository repository;
+	private final PlayerBoardsRepository store;
 	private final IdGenerator<Serializable> idGenerator;
 
 	public JoinBoard(PlayerBoardsRepository repository, IdGenerator<Serializable> idGenerator) {
-		this.repository = repository;
+		this.store = repository;
 		this.idGenerator = idGenerator;
 	}
 
@@ -29,7 +29,7 @@ public class JoinBoard {
 		checkInputs(codeMaker, board);
 		
 		//Miramos si ya estamos en el juego
-		Optional<PlayerBoard> alreadyJoinedBoard = Optional.ofNullable(repository.findPlayerBoard(codeMaker, board));
+		Optional<PlayerBoard> alreadyJoinedBoard = Optional.ofNullable(store.findPlayerBoard(codeMaker, board));
 		//Y si somos los makers
 		if(alreadyJoinedBoard.isPresent() && alreadyJoinedBoard.get().isCoder()) {
 			return alreadyJoinedBoard.get();
@@ -41,7 +41,7 @@ public class JoinBoard {
 		
 			
 		PlayerBoard playerBoard = PlayerBoard.playerCodeMaker(idGenerator.generate(), codeMaker, board);
-		repository.store(playerBoard);
+		store.store(playerBoard);
 		return playerBoard;
 	}
 
@@ -50,7 +50,7 @@ public class JoinBoard {
 		checkInputs(codeBreaker, board);
 		
 		//Miramos si ya estamos en el juego
-		Optional<PlayerBoard> alreadyJoinedBoard = Optional.ofNullable(repository.findPlayerBoard(codeBreaker, board));
+		Optional<PlayerBoard> alreadyJoinedBoard = Optional.ofNullable(store.findPlayerBoard(codeBreaker, board));
 		
 		//y si somos code breakers
 		if(alreadyJoinedBoard.isPresent() && alreadyJoinedBoard.get().isBreaker()) {
@@ -62,12 +62,12 @@ public class JoinBoard {
 		.throwIllegalArgumentException("Player "+codeBreaker.getId()+" can not join board " + board.getId()+" because it's the code maker");
 		
 		//Ahora si miramos si hay plazas
-		Collection<PlayerBoard> players = repository.findPlayers(board);
+		Collection<PlayerBoard> players = store.findPlayers(board);
 		Validations.when(players.size() == DEFAULT_MAX_PLAYERS_PER_BOARD).throwIllegalArgumentException("No more players are allowed for board " + board.getId());
 		
 		
 		PlayerBoard playerBoard = PlayerBoard.playerCodeBreaker(idGenerator.generate(), codeBreaker, board);
-		repository.store(playerBoard);
+		store.store(playerBoard);
 		return playerBoard;
 	}
 	

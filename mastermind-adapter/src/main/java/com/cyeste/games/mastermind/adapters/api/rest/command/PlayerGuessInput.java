@@ -7,23 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("input_codebreaker")
-public class PlayerGuessImput implements Serializable {
+public class PlayerGuessInput implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@JsonCreator
-	public PlayerGuessImput(
-			@JsonProperty("codeBreakerId")final String codeBreakerId, 
-			@JsonProperty("guess") final String[] guess, 
-			@JsonProperty("boardId") final String boardId) {
-		this.codeBreakerId = codeBreakerId;
-		this.guess = guess;
-		this.boardId = boardId;
-	}
-
+	
 	@JsonProperty("codeBreakerId")
 	private String codeBreakerId;
 
@@ -32,4 +22,34 @@ public class PlayerGuessImput implements Serializable {
 
 	@JsonProperty("boardId")
 	private String boardId;
+
+	@JsonCreator
+	public PlayerGuessInput(
+			@JsonProperty("codeBreakerId")final String codeBreakerId, 
+			@JsonProperty("guess") final String[] guess, 
+			@JsonProperty("boardId") final String boardId) {
+		this.codeBreakerId = codeBreakerId;
+		this.guess = guess;
+		this.boardId = boardId;
+	}
+
+	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public String getCodeBreakerId() {
+		return codeBreakerId;
+	}
+
+	public String[] getGuess() {
+		return guess;
+	}
+
+	public String getBoardId() {
+		return boardId;
+	}
+	
+	
 }
