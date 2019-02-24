@@ -23,9 +23,9 @@ import com.cyeste.games.mastermind.domain.port.IdGenerator;
 import com.cyeste.games.mastermind.domain.port.PlayersRepository;
 
 @RunWith(BlockJUnit4ClassRunner.class)
-public class CreateUserTest {
+public class CreatePlayerTest {
 
-	private final static Logger LOGGER = Logger.getLogger(CreateUserTest.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(CreatePlayerTest.class.getName());
 
 	private static final String DEFAULT_NAME = "Han Solo";
 	private static final String DEFAULT_ID = "id";

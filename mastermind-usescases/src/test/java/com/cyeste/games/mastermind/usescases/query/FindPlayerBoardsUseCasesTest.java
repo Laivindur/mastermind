@@ -2,6 +2,7 @@ package com.cyeste.games.mastermind.usescases.query;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -53,60 +54,103 @@ public class FindPlayerBoardsUseCasesTest {
 	@Before
 	public void setUp() {
 		useCaseInterpreter = new FindPlayerBoards(repository);
-		when(repository.findPlayerBoards(any())).thenReturn(Collections.emptyList());
-		when(repository.findPlayerBoardsAsCodeMaker(any())).thenReturn(Collections.emptyList());
-		when(repository.findPlayerBoardsAsCodeBreaker(any())).thenReturn(Collections.emptyList());
-		when(repository.findPlayerBoard(any())).thenReturn(null);
-		when(repository.findPlayerBoard(eq(DEFAULT_ID))).thenReturn(playerBoard);
-
 	}
 
+	
 	@Test
-	public void noPlayerBoardsFound() {
-		Iterator<PlayerBoard> playerBoard = useCaseInterpreter.findAllBoards(player);
+	public void noBoardsFoundDueToNoPlayer() {
+		when(repository.findBoards(any())).thenReturn(Collections.emptyList());
+		Iterator<PlayerBoard> playerBoard = useCaseInterpreter.findAllPlayersBoard(null);
 		assertNotNull(playerBoard);
 		assertFalse(playerBoard.hasNext());
-		verify(repository).findPlayerBoards(player);
-	}
-
-	@Test
-	public void noPlayerBoardsAsCodeMakerNotFound() {
-		Iterator<PlayerBoard> playerBoard = useCaseInterpreter.findPlayerBoardsAsCodeMaker(player);
-		assertNotNull(playerBoard);
-		assertFalse(playerBoard.hasNext());
-		verify(repository).findPlayerBoardsAsCodeMaker(player);
+		verify(repository).findBoards(null);
 	}
 	
 	@Test
-	public void noPlayerBoardsAsCodeBreakerNotFound() {
-		Iterator<PlayerBoard> playerBoard = useCaseInterpreter.findPlayerBoardsAsCodeBreaker(player);
-		assertNotNull(playerBoard);
-		assertFalse(playerBoard.hasNext());
-		verify(repository).findPlayerBoardsAsCodeBreaker(player);
-	}
-	
-	@Test
-	public void playerBoardsAsCodeMakerFound() {
-		when(repository.findPlayerBoardsAsCodeMaker(any())).thenReturn(Arrays.asList(playerBoard));
-
-		Iterator<PlayerBoard> playerBoard = useCaseInterpreter.findPlayerBoardsAsCodeMaker(player);
+	public void boardsFound() {
+		when(repository.findBoards(eq(player))).thenReturn(Arrays.asList(playerBoard));
+		Iterator<PlayerBoard> playerBoard = useCaseInterpreter.findAllPlayersBoard(player);
 		assertNotNull(playerBoard);
 		assertTrue(playerBoard.hasNext());
-		verify(repository).findPlayerBoardsAsCodeMaker(player);
+		verify(repository).findBoards(player);
 	}
 	
-
+	/**/
+	
 	@Test
-	public void playerBoardsAsCodeBreakerFound() {
-		when(repository.findPlayerBoardsAsCodeBreaker(any())).thenReturn(Arrays.asList(playerBoard));
-
-		Iterator<PlayerBoard> playerBoard = useCaseInterpreter.findPlayerBoardsAsCodeBreaker(player);
+	public void noPlayersFoundDueToNoBoard() {
+		when(repository.findPlayers(any())).thenReturn(Collections.emptyList());
+		Iterator<PlayerBoard> playerBoard = useCaseInterpreter.findAllBoardsPlayers(null);
 		assertNotNull(playerBoard);
-		assertTrue(playerBoard.hasNext());
-		verify(repository).findPlayerBoardsAsCodeBreaker(player);
+		assertFalse(playerBoard.hasNext());
+		verify(repository).findPlayers(null);
 	}
 
+	@Test
+	public void playersFound() {
+		when(repository.findPlayers(eq(board))).thenReturn(Arrays.asList(playerBoard));
+		Iterator<PlayerBoard> playerBoard = useCaseInterpreter.findAllBoardsPlayers(board);
+		assertNotNull(playerBoard);
+		assertTrue(playerBoard.hasNext());
+		verify(repository).findPlayers(board);
+	}
+	/**/
+	
+	@Test
+	public void noPlayerBoardFound() {
+		when(repository.findById(any())).thenReturn(null);
+		PlayerBoard playerBoard = useCaseInterpreter.findById("unkown");
+		assertNull(playerBoard);
+		verify(repository).findById("unkown");
+	}
+	
+	@Test
+	public void noPayerBoardFoundDueToNoId() {
+		when(repository.findById(any())).thenReturn(null);
+		PlayerBoard playerBoard = useCaseInterpreter.findById(null);
+		assertNull(playerBoard);
+		verify(repository).findById(null);
+	}
 
-
+	@Test
+	public void playerBoardFoundById() {
+		when(repository.findById(eq(DEFAULT_ID))).thenReturn(playerBoard);
+		PlayerBoard playerBoard = useCaseInterpreter.findById(DEFAULT_ID);
+		assertNotNull(playerBoard);
+		verify(repository).findById(DEFAULT_ID);
+	}
+	
+	/**/
+	@Test
+	public void noPlayerBoardFoundDueToNoPlayer() {
+		when(repository.findPlayerBoard(any(),any())).thenReturn(null);	
+		PlayerBoard playerBoard = useCaseInterpreter.findPlayerBoard(null, board);
+		assertNull(playerBoard);
+		verify(repository).findPlayerBoard(null, board);
+	}
+	
+	@Test
+	public void noPlayerBoardFoundDueToNoBoard() {
+		when(repository.findPlayerBoard(any(),any())).thenReturn(null);	
+		PlayerBoard playerBoard = useCaseInterpreter.findPlayerBoard(player, null);
+		assertNull(playerBoard);
+		verify(repository).findPlayerBoard(player, null);
+	}
+	
+	@Test
+	public void noPlayerBoardFoundDueToAlllNulls() {
+		when(repository.findPlayerBoard(any(),any())).thenReturn(null);	
+		PlayerBoard playerBoard = useCaseInterpreter.findPlayerBoard(null, null);
+		assertNull(playerBoard);
+		verify(repository).findPlayerBoard(null, null);
+	}
+	
+	@Test
+	public void playerBoardFoundByEntities() {
+		when(repository.findPlayerBoard(eq(player),eq(board))).thenReturn(playerBoard);
+		PlayerBoard playerBoard = useCaseInterpreter.findPlayerBoard(player, board);
+		assertNotNull(playerBoard);
+		verify(repository).findPlayerBoard(player, board);
+	}
 
 }
