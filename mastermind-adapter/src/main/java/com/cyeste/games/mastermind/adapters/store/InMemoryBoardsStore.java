@@ -1,6 +1,5 @@
 package com.cyeste.games.mastermind.adapters.store;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,7 +19,7 @@ import com.cyeste.games.mastermind.domain.port.DecodingBoardsRepository;
  * @author Christian Yeste Vidal
  *
  */
-@Repository("inMemoryBoardsStore")
+@Repository
 public class InMemoryBoardsStore extends AbstractInMemoryStore implements DecodingBoardsRepository{
 
 	public InMemoryBoardsStore() {
@@ -42,7 +41,7 @@ public class InMemoryBoardsStore extends AbstractInMemoryStore implements Decodi
 	}
 
 	@Override
-	public DecodingBoard findBoardById(Serializable id) {
+	public DecodingBoard findById(String id) {
 		Optional<Object> entity = Optional.ofNullable(getDatasource().get(id));
 		if(entity.isPresent()) {
 			return DecodingBoard.class.cast(entity.get());

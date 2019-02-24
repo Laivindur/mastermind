@@ -6,7 +6,6 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.Serializable;
 import java.util.logging.Logger;
 
 import org.junit.Before;
@@ -37,7 +36,7 @@ public class CreatePlayerTest {
 	public PlayersRepository repository;
 	
 	@Mock
-	public IdGenerator<Serializable> idGenerator;
+	public IdGenerator idGenerator;
 
 	private CreatePlayer useCaseInterpreter;
 	

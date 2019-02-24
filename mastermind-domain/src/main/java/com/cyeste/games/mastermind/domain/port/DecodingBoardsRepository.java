@@ -1,6 +1,5 @@
 package com.cyeste.games.mastermind.domain.port;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import com.cyeste.games.mastermind.domain.DecodingBoard;
@@ -16,7 +15,7 @@ public interface DecodingBoardsRepository {
 	
 	Collection<DecodingBoard> getAllBoards();
 	
-	DecodingBoard findBoardById(Serializable id);
+	DecodingBoard findById(String id);
 	
 	
 }

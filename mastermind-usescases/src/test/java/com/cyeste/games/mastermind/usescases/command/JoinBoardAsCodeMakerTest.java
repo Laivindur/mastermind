@@ -9,7 +9,6 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.Serializable;
 import java.util.logging.Logger;
 
 import org.junit.Before;
@@ -39,7 +38,7 @@ public class JoinBoardAsCodeMakerTest {
 	public PlayerBoardsRepository repository;
 	
 	@Mock
-	public IdGenerator<Serializable> idGenerator;
+	public IdGenerator idGenerator;
 	@Mock
 	private Player codeMaker;
 	

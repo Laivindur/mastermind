@@ -37,7 +37,7 @@ public class InMemoryPlayersStoreTest {
 	
 	@Test
 	public void notFound() {
-		Player playerFound = repository.findPlayer(DEFAULT_ID);
+		Player playerFound = repository.findById(DEFAULT_ID);
 		assertNull(playerFound);		
 		LOGGER.info("Player found: " + newPlayer);
 	}
@@ -47,7 +47,7 @@ public class InMemoryPlayersStoreTest {
 		repository.store(newPlayer);
 		LOGGER.info("Player created: " + newPlayer);
 		
-		Player playerFound = repository.findPlayer(DEFAULT_ID);
+		Player playerFound = repository.findById(DEFAULT_ID);
 		assertEquals(newPlayer.getId(), playerFound.getId());		
 		LOGGER.info("Player found: " + newPlayer);
 	}

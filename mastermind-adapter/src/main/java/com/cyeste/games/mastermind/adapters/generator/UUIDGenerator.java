@@ -14,7 +14,10 @@ import com.cyeste.games.mastermind.domain.port.IdGenerator;
  *
  */
 @Component("uuidGenerator")
-public class UUIDGenerator implements IdGenerator<String> {
+public class UUIDGenerator implements IdGenerator {
+	
+	public UUIDGenerator() {
+	}
 
 	@Override
 	public String generate() {
