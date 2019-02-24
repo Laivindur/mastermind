@@ -15,8 +15,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import com.cyeste.games.mastermind.domain.Player;
-import com.cyeste.games.mastermind.domain.port.PlayersRepository;
+import com.cyeste.games.mastermind.domain.DecodingBoard;
+import com.cyeste.games.mastermind.domain.Pattern;
+import com.cyeste.games.mastermind.domain.port.DecodingBoardsRepository;
 
 /**
  * 
@@ -24,9 +25,7 @@ import com.cyeste.games.mastermind.domain.port.PlayersRepository;
  *
  */
 @RunWith(BlockJUnit4ClassRunner.class)
-public class FindPlayerUseCaseTest {
-
-	private static final String DEFAULT_NAME = "Han Solo";
+public class FindBoardUseCaseTest {
 
 	private static final String DEFAULT_ID = "id";
 
@@ -34,30 +33,31 @@ public class FindPlayerUseCaseTest {
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
 	
 	@Mock
-	public PlayersRepository repository;
+	public DecodingBoardsRepository repository;
 	
-	private FindPlayer useCaseInterpreter;
+	private DecodingBoard board = DecodingBoard.createBoard(DEFAULT_ID, 1, Pattern.builder().addPeg("GREEN").build());
+	
+	private FindBoard useCaseInterpreter;
 	
 	@Before
 	public void setUp() {
-		useCaseInterpreter = new FindPlayer(repository);
-		when(repository.findById(eq(DEFAULT_ID))).thenReturn(Player.builder().id(DEFAULT_ID).name(DEFAULT_NAME).build());
+		useCaseInterpreter = new FindBoard(repository);
+		when(repository.findById(eq(DEFAULT_ID))).thenReturn(board);
 	}
 	
 	
 	@Test
-	public void playerNotFound() {
-		Player player = useCaseInterpreter.find("unkown");
-		assertNull(player);
+	public void boardNotFound() {
+		DecodingBoard board = useCaseInterpreter.find("unkown");
+		assertNull(board);
 		verify(repository).findById("unkown");
 	}
 	
 	@Test
 	public void playerFound() {
-		Player player = useCaseInterpreter.find(DEFAULT_ID);
-		assertNotNull(player);
-		assertEquals(DEFAULT_ID, player.getId());
-		assertEquals(DEFAULT_NAME, player.getName());
+		DecodingBoard board = useCaseInterpreter.find(DEFAULT_ID);
+		assertNotNull(board);
+		assertEquals(DEFAULT_ID, board.getId());
 		verify(repository).findById(DEFAULT_ID);
 		
 	}

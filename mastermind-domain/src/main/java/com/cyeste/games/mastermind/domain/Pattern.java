@@ -11,6 +11,9 @@ import com.cyeste.games.mastermind.domain.utils.Validations;
 
 /**
  * 
+ * Componente de tipo <i>ValueObject</i> que representa un código.
+ * Un código  es uan secuencia de colores. Notese que la longuitud del patrón no es relevante para el propio patrón. Esto es un aspecto 
+ * de configuración o parametrización de la aplicación
  * @author Christian Yeste Vidal
  *
  */
@@ -42,8 +45,10 @@ public class Pattern {
 	public String[] toStringArray() {
 		return pegs.stream().map(Peg::getColor).map(Color::name).toArray(String[]::new);
 	}
+	
 	/**
-	 * Matching pegs per position and color
+	 * Ejecuta una comparación de pegs. Esta comparación de pegs cuenta cuantos pegs (elementos de la sequencia) hacen matching 
+	 * por color y posición
 	 * @param pattern
 	 * @return
 	 */
@@ -56,7 +61,8 @@ public class Pattern {
 	}
 
 	/**
-	 * Matching pegs' colors
+	 * Ejecuta una comparación de pegs solo por color. Esta comparación de pegs cuenta cuantos pegs (elementos de la sequencia) hacen matching 
+	 * por color. No cuenta repetidos y descuenta aquellos que hicieron  matching por posición.
 	 * @param pattern
 	 * @return
 	 */
@@ -92,6 +98,11 @@ public class Pattern {
 		return new PatternBuilder();
 	}
 	
+	/**
+	 * Los {@link Pattern} solo pueden ser construidos mediante este builder
+	 * @author Christian Yeste Vidal
+	 *
+	 */
 	public static class PatternBuilder{
 		private List<Peg> pegs;
 		

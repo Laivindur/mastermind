@@ -9,9 +9,12 @@
 		<artifactId>mastermind</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>mastermind-domain</artifactId>
-	<name>mastermind-domain</name>
+	
 	<url>https://github.com/Laivindur/mastermind</url>
+	<artifactId>mastermind-domain</artifactId>
+	<name>mastermind-domain</name>	
+	<packaging>jar</packaging>
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>

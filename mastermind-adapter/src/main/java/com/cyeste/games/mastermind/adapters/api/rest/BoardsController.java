@@ -30,7 +30,6 @@ import com.cyeste.games.mastermind.usescases.command.GuessBoard;
 import com.cyeste.games.mastermind.usescases.command.JoinBoard;
 import com.cyeste.games.mastermind.usescases.query.FindBoard;
 import com.cyeste.games.mastermind.usescases.query.FindPlayer;
-import com.cyeste.games.mastermind.usescases.query.FindPlayerBoards;
 
 /**
  * 
@@ -45,24 +44,20 @@ public class BoardsController {
 	private FindBoard findBoardUseCaseHandler;
 	private CreateBoard createBoardUseCaseHandler;
 	private JoinBoard joinBoardUseCaseHandler;
-	private GuessBoard guessBoardUseCaseHandler;
+	private GuessBoard guessBoardUsecaseHandler;
 	
 	
 	@Autowired
-	public BoardsController(
-			FindPlayer findPlayerUseCaseHandler,
-			FindBoard findBoardUseCaseHandler, 
-			FindPlayerBoards findPlayersBoardsUseCaseHandler,
-			CreateBoard createBoardUseCaseHandler,
-			JoinBoard joinBoardUseCaseHandler,
-			GuessBoard guessBoardUseCaseHandler) {
+	public BoardsController(FindPlayer findPlayerUseCaseHandler, FindBoard findBoardUseCaseHandler,
+			CreateBoard createBoardUseCaseHandler, JoinBoard joinBoardUseCaseHandler,
+			GuessBoard guessBoardUsecaseHandler) {
 		this.findPlayerUseCaseHandler = findPlayerUseCaseHandler;
 		this.findBoardUseCaseHandler = findBoardUseCaseHandler;
 		this.createBoardUseCaseHandler = createBoardUseCaseHandler;
 		this.joinBoardUseCaseHandler = joinBoardUseCaseHandler;
-		this.guessBoardUseCaseHandler = guessBoardUseCaseHandler;
+		this.guessBoardUsecaseHandler = guessBoardUsecaseHandler;
 	}
-	
+
 	@RequestMapping( method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<List<BoardResource>> all() {
@@ -114,7 +109,7 @@ public class BoardsController {
 			throw new ResourceNotFoundException(BoardResource.class, input.getBoardId());
 		}
 		PlayerBoard join = joinBoardUseCaseHandler.joinAsCodeBreaker(codeBreaker, board);
-		guessBoardUseCaseHandler.guess(join, input.getGuess());
+		guessBoardUsecaseHandler.guess(join, input.getGuess());
 		return ResponseEntity.ok(BoardResource.toResource(join));
 		
 	}

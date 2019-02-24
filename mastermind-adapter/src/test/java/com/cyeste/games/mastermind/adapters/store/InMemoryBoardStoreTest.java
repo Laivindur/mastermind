@@ -42,7 +42,7 @@ public class InMemoryBoardStoreTest {
 	
 	@Test
 	public void notFound() {
-		DecodingBoard boardFound = repository.findBoardById(DEFAULT_ID);
+		DecodingBoard boardFound = repository.findById(DEFAULT_ID);
 		assertNull(boardFound);		
 		LOGGER.info("Board found: " + boardFound);
 	}
@@ -52,7 +52,7 @@ public class InMemoryBoardStoreTest {
 		repository.store(newBoard);
 		LOGGER.info("Board created: " + newBoard);
 		
-		DecodingBoard boardFound = repository.findBoardById(DEFAULT_ID);
+		DecodingBoard boardFound = repository.findById(DEFAULT_ID);
 		assertEquals(newBoard.getId(), boardFound.getId());		
 		LOGGER.info("Player found: " + newBoard);
 	}

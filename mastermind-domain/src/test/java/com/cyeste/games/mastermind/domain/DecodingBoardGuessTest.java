@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 import com.cyeste.games.mastermind.domain.Peg.Color;
-import com.cyeste.games.mastermind.domain.exception.InvalidOperationException;
+import com.cyeste.games.mastermind.domain.exception.BoardClosedException;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class DecodingBoardGuessTest {
 
@@ -55,7 +55,7 @@ public class DecodingBoardGuessTest {
 		LOGGER.info("Board: " + board.toString());
 	}
 
-	@Test(expected = InvalidOperationException.class)
+	@Test(expected = BoardClosedException.class)
 	public void noMoreGamesAllowed() {
 		List<Peg> guessPegs = Arrays.asList(DEFAULT_CODE.toPegArray());
 		Collections.reverse(guessPegs);

@@ -1,6 +1,5 @@
 package com.cyeste.games.mastermind.adapters.store;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -18,7 +17,7 @@ import com.cyeste.games.mastermind.domain.port.PlayersRepository;
  * @author Christian Yeste Vidal
  *
  */
-@Repository("inMemoryPlayersStore")
+@Repository
 public class InMemoryPlayersStore extends AbstractInMemoryStore implements PlayersRepository {
 	
 		
@@ -33,7 +32,7 @@ public class InMemoryPlayersStore extends AbstractInMemoryStore implements Playe
 	}
 
 	@Override
-	public Player findPlayer(Serializable id) {
+	public Player findById(String id) {
 		Optional<Object> entity = Optional.ofNullable(getDatasource().get(id));
 		if(entity.isPresent()) {
 			return Player.class.cast(entity.get());
