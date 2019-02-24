@@ -1,10 +1,11 @@
 package com.cyeste.games.mastermind.adapters.store;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.*;
 
 import java.util.Collection;
 import java.util.logging.Logger;
@@ -40,17 +41,14 @@ public class InMemoryBoardStoreTest {
 	}
 	
 	@Test
-	public void storeBoardOnce() {
-		repository.store(newBoard);
-		LOGGER.info("Board created: " + newBoard);
-		
+	public void notFound() {
 		DecodingBoard boardFound = repository.findBoardById(DEFAULT_ID);
-		assertEquals(newBoard.getId(), boardFound.getId());		
-		LOGGER.info("Player found: " + newBoard);
+		assertNull(boardFound);		
+		LOGGER.info("Board found: " + boardFound);
 	}
 	
 	@Test
-	public void storeBoardTwice() {
+	public void storeOnce() {
 		repository.store(newBoard);
 		LOGGER.info("Board created: " + newBoard);
 		
@@ -59,6 +57,7 @@ public class InMemoryBoardStoreTest {
 		LOGGER.info("Player found: " + newBoard);
 	}
 	
+		
 	@Test
 	public void emptyBoardsList() {
 		assertTrue(repository.getAllBoards().isEmpty());

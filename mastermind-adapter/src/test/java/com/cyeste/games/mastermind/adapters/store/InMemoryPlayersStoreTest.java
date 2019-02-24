@@ -1,6 +1,7 @@
 package com.cyeste.games.mastermind.adapters.store;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.logging.Logger;
 
@@ -16,11 +17,11 @@ import com.cyeste.games.mastermind.domain.Player;
 import com.cyeste.games.mastermind.domain.port.PlayersRepository;
 
 @RunWith(BlockJUnit4ClassRunner.class)
-public class InMemoryDatStoreTest {
+public class InMemoryPlayersStoreTest {
 
 	private static final String DEFAULT_NAME = "Han Solo";
 	private static final String DEFAULT_ID = "id";
-	private final static Logger LOGGER = Logger.getLogger(InMemoryDatStoreTest.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(InMemoryPlayersStoreTest.class.getName());
 	
 	@Rule
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -35,7 +36,14 @@ public class InMemoryDatStoreTest {
 	}
 	
 	@Test
-	public void storePlayerOnce() {
+	public void notFound() {
+		Player playerFound = repository.findPlayer(DEFAULT_ID);
+		assertNull(playerFound);		
+		LOGGER.info("Player found: " + newPlayer);
+	}
+	
+	@Test
+	public void storeOnce() {
 		repository.store(newPlayer);
 		LOGGER.info("Player created: " + newPlayer);
 		
@@ -44,4 +52,5 @@ public class InMemoryDatStoreTest {
 		LOGGER.info("Player found: " + newPlayer);
 	}
 	
+
 }
