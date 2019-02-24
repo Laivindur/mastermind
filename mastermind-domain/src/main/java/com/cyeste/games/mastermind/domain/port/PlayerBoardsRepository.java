@@ -12,11 +12,11 @@ public interface PlayerBoardsRepository {
 	
 	PlayerBoard findPlayerBoard(Serializable id);
 	
-	Collection<PlayerBoard> getPlayerBoards(Player  player);
+	Collection<PlayerBoard> findPlayerBoards(Player  player);
 	
-	Collection<PlayerBoard> getPlayerBoardsAsCodeMaker(Player player);
+	Collection<PlayerBoard> findPlayerBoardsAsCodeMaker(Player player);
 	
-	Collection<PlayerBoard> getPlayerBoardsAsCodeBreaker(Player player);
+	Collection<PlayerBoard> findPlayerBoardsAsCodeBreaker(Player player);
 	
 	
 }
