@@ -54,7 +54,7 @@ public class FindPlayerUseCaseTest {
 	
 	@Test
 	public void playerFound() {
-		Player player = repository.findPlayer(DEFAULT_ID);
+		Player player = useCaseInterpreter.find(DEFAULT_ID);
 		assertNotNull(player);
 		assertEquals(DEFAULT_ID, player.getId());
 		assertEquals(DEFAULT_NAME, player.getName());
