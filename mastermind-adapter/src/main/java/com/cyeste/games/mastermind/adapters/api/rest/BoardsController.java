@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.cyeste.games.mastermind.adapters.api.rest.command.PlayerCodeInput;
 import com.cyeste.games.mastermind.adapters.api.rest.command.PlayerGuessInput;
@@ -82,7 +81,7 @@ public class BoardsController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<BoardResource> create(@RequestBody @Valid final PlayerCodeInput input, UriComponentsBuilder uriBuiilder) {
+	public ResponseEntity<BoardResource> create(@RequestBody @Valid final PlayerCodeInput input) {
 		//XXX Dada la implicación de varios boundaries, deberíamos mover esto a un servicio de aplicación
 		Player codeMaker = findPlayerUseCaseHandler.find(input.getCodeMakerId());
 		if (codeMaker != null) {
@@ -96,17 +95,17 @@ public class BoardsController {
 		
 	}
 	
-	@RequestMapping(value = "/{boardId}/boards/guess", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{boardId}/guess/", method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity<BoardResource> guess(@RequestBody @Valid final PlayerGuessInput input, UriComponentsBuilder uriBuiilder) {
+	public ResponseEntity<BoardResource> guess(@RequestBody @Valid final PlayerGuessInput input, @PathVariable("boardId") final String boardId) {
 		
 		Player codeBreaker = findPlayerUseCaseHandler.find(input.getCodeBreakerId());
-		if (codeBreaker != null) {
+		if (codeBreaker == null) {
 			throw new ResourceNotFoundException(PlayerResource.class, input.getCodeBreakerId());
 		}
-		DecodingBoard board = findBoardUseCaseHandler.find(input.getBoardId());
-		if (board != null) {
-			throw new ResourceNotFoundException(BoardResource.class, input.getBoardId());
+		DecodingBoard board = findBoardUseCaseHandler.find(boardId);
+		if (board == null) {
+			throw new ResourceNotFoundException(BoardResource.class, boardId);
 		}
 		PlayerBoard join = joinBoardUseCaseHandler.joinAsCodeBreaker(codeBreaker, board);
 		guessBoardUsecaseHandler.guess(join, input.getGuess());

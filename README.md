@@ -4,8 +4,6 @@
 
 * Java : SDK or JRE 1.8 or later
 * Maven: 3.6 or later
-* RAM : _TODO_
-* CPU : _TODO_
 
 ## Architecutre
 
@@ -22,7 +20,7 @@
 ### Adapters
 
 * Dependency: upon **UseCases**
-* Components: Controllers, Repositories's implementation, Generators' implementations, Configurers' implementation
+* Components: Controllers, Repositories's implementation, Generators' implementations, Rest resources, Mappers
 
 ### Application
 
@@ -33,11 +31,301 @@
 
 ## Run
 
+### Find boards
+
+```cmd
+GET http://localhost:8080/boards/ HTTP 1.1
+
+HTTP Status 200 Ok
+Content-Type: application/json;encoding=utf-8
+[]
+```
+
+### Create Cheewe as player and future code maker
+
+```cmd
+POST http://localhost:8080/players/ HTTP 1.1
+Content-Type: application/json;encoding=utf-8
+{
+ "name":"Cheewaka"
+}
+
+HTTP Status 200 Ok
+Content-Type: application/json;encoding=utf-8
+{
+    "id": "a63bea31-4d00-4929-86e7-28bf6b89a525",
+    "name": "Cheewaka"
+}
+```
+
+### Create Han as player and future code breaker
+
+```cmd
+POST http://localhost:8080/players/ HTTP 1.1
+Content-Type: application/json;encoding=utf-8
+{
+ "name":"Han Solo"
+}
+
+HTTP Status 200 Ok
+Content-Type: application/json;encoding=utf-8
+{
+    "id": "29d66dde-7b11-4f6f-9cfe-2fd37cd34ef9",
+    "name": "Han Solo"
+}
+```
+
+### Create Board
+
+```cmd
+POST http://localhost:8080/boards/ HTTP 1.1
+Content-Type: application/json;encoding=utf-8
+{
+ "codeMakerId":"7c74d494-aa2a-42e4-a729-f7ba7245f45e",
+ "code": ["GREEN", "YELLOW", "YELLOW","PINK", "BLUE"]
+}
+
+HTTP Status 200 Ok
+Content-Type: application/json;encoding=utf-8
+{
+    "id": "f23a6abb-ea8d-400d-afe5-06f7211c2be6",
+    "code": [
+        "GREEN",
+        "YELLOW",
+        "YELLOW",
+        "PINK",
+        "BLUE"
+    ],
+    "solved": false,
+    "leftMoreGames": true,
+    "codeMaker": {
+        "id": "a63bea31-4d00-4929-86e7-28bf6b89a525",
+        "name": "Cheewaka"
+    }
+}
+```
+
+### Anonymous access to the board list
+
+```cmd
+GET http://localhost:8080/boards/ HTTP 1.1
+
+HTTP Status 200 Ok
+Content-Type: application/json;encoding=utf-8
+[
+    {
+        "id": "f23a6abb-ea8d-400d-afe5-06f7211c2be6",
+        "code": [
+            "*"
+        ],
+        "solved": false,
+        "leftMoreGames": true
+    }
+]
+```
+
+### Guess and join boards
+
+```cmd
+PUT http://localhost:8080/boards/{boardId}/guess HTTP 1.1
+Content-Type : application/json
+{
+ "codeBreakerId":"29d66dde-7b11-4f6f-9cfe-2fd37cd34ef9",
+ "guess": ["RED", "RED", "RED","RED", "RED"]
+}
+
+HTTP Status 200 Ok
+Content-Type: application/json;encoding=utf-8
+{
+    "id": "f23a6abb-ea8d-400d-afe5-06f7211c2be6",
+    "guesses": [
+        {
+            "code": [
+                "GREEN",
+                "YELLOW",
+                "YELLOW",
+                "PINK",
+                "BLUE"
+            ],
+            "coloredPegs": 0,
+            "whitePegs": 0,
+            "solved": false
+        }
+    ],
+    "solved": false,
+    "leftMoreGames": true,
+    "codeMaker": {
+        "id": "29d66dde-7b11-4f6f-9cfe-2fd37cd34ef9",
+        "name": "Han Solo"
+    }
+}
+```
+
+### Guess again one matching
+
+```cmd
+PUT http://localhost:8080/boards/{boardId}/guess HTTP 1.1
+Content-Type : application/json
+{
+ "codeBreakerId":"29d66dde-7b11-4f6f-9cfe-2fd37cd34ef9",
+ "guess": ["GREEN", "RED", "RED","RED", "RED"]
+}
+
+HTTP Status 200 Ok
+Content-Type: application/json;encoding=utf-8
+{
+    "id": "f23a6abb-ea8d-400d-afe5-06f7211c2be6",
+    "code": [
+        "*"
+    ],
+    "guesses": [
+       ...,
+        {
+            "code": [
+                "GREEN",
+                "YELLOW",
+                "YELLOW",
+                "PINK",
+                "BLUE"
+            ],
+            "coloredPegs": 1,
+            "whitePegs": 0,
+            "solved": false
+        }
+    ],
+    "solved": false,
+    "leftMoreGames": true,
+    "codeMaker": {
+        "id": "29d66dde-7b11-4f6f-9cfe-2fd37cd34ef9",
+        "name": "Han Solo"
+    }
+}
+```
+
+### Guess again and one color matching
+
+```cmd
+PUT http://localhost:8080/boards/{boardId}/guess HTTP 1.1
+Content-Type : application/json
+{
+ "codeBreakerId":"29d66dde-7b11-4f6f-9cfe-2fd37cd34ef9",
+ "guess": ["GREEN", "PINK", "RED","RED", "RED"]
+}
+
+HTTP Status 200 Ok
+Content-Type: application/json;encoding=utf-8
+{
+    "id": "f23a6abb-ea8d-400d-afe5-06f7211c2be6",
+    "code": [
+        "*"
+    ],
+    "guesses": [
+       ...,
+        {
+            "code": [
+                "GREEN",
+                "YELLOW",
+                "YELLOW",
+                "PINK",
+                "BLUE"
+            ],
+            "coloredPegs": 1,
+            "whitePegs": 1,
+            "solved": false
+        }
+    ],
+    "solved": false,
+    "leftMoreGames": true,
+    "codeMaker": {
+        "id": "29d66dde-7b11-4f6f-9cfe-2fd37cd34ef9",
+        "name": "Han Solo"
+    }
+}
+```
+
+### Guess and win
+
+
+```cmd
+PUT http://localhost:8080/boards/{boardId}/guess HTTP 1.1
+Content-Type : application/json
+{
+ "codeBreakerId":"29d66dde-7b11-4f6f-9cfe-2fd37cd34ef9",
+ "guess": ["GREEN",
+        "YELLOW",
+        "YELLOW",
+        "PINK",
+        "BLUE"]
+}
+
+HTTP Status 200 Ok
+Content-Type: application/json;encoding=utf-8
+{
+    "id": "f23a6abb-ea8d-400d-afe5-06f7211c2be6",
+    "code": [
+        "*"
+    ],
+    "guesses": [
+        ...,
+        {
+            "code": [
+                "GREEN",
+                "YELLOW",
+                "YELLOW",
+                "PINK",
+                "BLUE"
+            ],
+            "coloredPegs": 5,
+            "whitePegs": 0,
+            "solved": true
+        }
+    ],
+    "solved": true,
+    "leftMoreGames": false,
+    "codeMaker": {
+        "id": "29d66dde-7b11-4f6f-9cfe-2fd37cd34ef9",
+        "name": "Han Solo"
+    }
+}
+```
+
+### Keep guessing ?
+
+```cmd
+PUT http://localhost:8080/boards/{boardId}/guess HTTP 1.1
+Content-Type : application/json
+{
+ "codeBreakerId":"29d66dde-7b11-4f6f-9cfe-2fd37cd34ef9",
+ "guess": ["GREEN",
+        "YELLOW",
+        "YELLOW",
+        "PINK",
+        "BLUE"]
+}
+
+HTTP Status 500 Internal Serv Error
+Content-Type: application/json;encoding=utf-8
+
+{
+    "code": "Ups! something went wrong up here",
+    "cause": "com.cyeste.games.mastermind.domain.exception.BoardClosedException",
+    "threadId": 23,
+    "date": {
+        "zone": "UTC",
+        "date_time": "2019-02-24T22:27:31.83Z"
+    },
+    "causeMessage": "The board left no more games or is solved."
+}
+```
+
 ## Tests
 
 ## Misc
 
 ## Related links
 
-* http://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
-* https://softwareengineering.stackexchange.com/questions/373413/implementing-a-rest-api-in-a-clean-architecture
+* [Uncle Bob Blog](http://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+* [REST + Clean Architecture hints](https://softwareengineering.stackexchange.com/questions/373413/implementing-a-rest-api-in-a-clean-architecture)
+* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
+* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
+* [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)

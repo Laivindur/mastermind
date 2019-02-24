@@ -35,6 +35,9 @@ public class BoardResource implements Serializable {
 	@JsonProperty("codeMaker")
 	private PlayerResource codeMaker;
 	
+	@JsonProperty("gamesLeft")
+	private int gamesLeft;
+	
 	
 	@JsonCreator
 	public BoardResource(
@@ -43,13 +46,15 @@ public class BoardResource implements Serializable {
 			@JsonProperty("guesses") GuessResources[] guesses, 
 			@JsonProperty("solved") boolean isSolved, 
 			@JsonProperty("leftMoreGames")boolean leftMoreGames, 			
-			@JsonProperty("codeMaker") PlayerResource codeMaker) {
+			@JsonProperty("codeMaker") PlayerResource codeMaker,
+			@JsonProperty("gamesLeft") int gamesLeft) {
 		this.code = code;
 		this.guesses = guesses;
 		this.isSolved = isSolved;
 		this.leftMoreGames = leftMoreGames;
 		this.id = id;
 		this.codeMaker = codeMaker;
+		this.gamesLeft = gamesLeft;
 	}
 
 	public String[] getCode() {
@@ -82,7 +87,7 @@ public class BoardResource implements Serializable {
 				new String[] {"*"}, 
 				GuessResources.toResources(board.games()), 
 				board.isSolved(), 
-				board.leftGames(), null);
+				board.leftGames(), null, board.gamesLeft());
 	}
 	
 	public static BoardResource toResource(PlayerBoard playerBoard) {
@@ -93,11 +98,11 @@ public class BoardResource implements Serializable {
 		return  new BoardResource(
 				board.getId().toString(), 
 				(isCodeMaker) ? 
-						code.toStringArray() : new String[] {},
+						code.toStringArray() : new String[] {"*"},
 						GuessResources.toResources(board.games()), 
 				board.isSolved(), 
 				board.leftGames(), 
-				PlayerResource.toResource(playerBoard.getPlayer()));
+				PlayerResource.toResource(playerBoard.getPlayer()),board.gamesLeft());
 	}
 
 	

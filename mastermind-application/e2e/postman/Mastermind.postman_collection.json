@@ -1,0 +1,301 @@
+{
+	"info": {
+		"_postman_id": "5f536d73-e31b-471b-a709-ca10ad7ea791",
+		"name": "Mastermind",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List of Boards",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/boards/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"boards",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Player CodeMaker",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "83926b67-4b09-40ea-8955-abf2608ff536",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// example using response assertions",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error;  ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response should be have player id\", function () { ",
+							"    pm.response.to.not.be.error;  ",
+							"    pm.response.to.have.jsonBody(\"id\"); ",
+							"    ",
+							"    var jsonData = pm.response.json();",
+							"    pm.environment.set(\"codeMakerId\", jsonData.id);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"name\":\"Cheewaka\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/players/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"players",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Player CodeBreaker",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "420b31a1-2c46-43dd-84f4-e7d9e8c2c048",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// example using response assertions",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error;  ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response should be have player id\", function () { ",
+							"    pm.response.to.not.be.error;  ",
+							"    pm.response.to.have.jsonBody(\"id\"); ",
+							"    ",
+							"    var jsonData = pm.response.json();",
+							"    pm.environment.set(\"codeBreakerId\", jsonData.id);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"name\":\"Han Solo\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/players/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"players",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e852a6b0-97d1-42fe-98d6-9ce848c1dfa2",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// example using response assertions",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error;  ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response should be have player id\", function () { ",
+							"    pm.response.to.not.be.error;  ",
+							"    pm.response.to.have.jsonBody(\"id\"); ",
+							"    ",
+							"    var jsonData = pm.response.json();",
+							"    pm.environment.set(\"boardId\", jsonData.id);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"codeMakerId\": \"{{codeMakerId}}\",\n \"code\": {{code}}\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/boards/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"boards",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Guess Board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9bc39434-4b6b-4ef1-9b4a-c4d61c4fda6c",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// example using response assertions",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error;  ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response should be have player id\", function () { ",
+							"    pm.response.to.not.be.error;  ",
+							"    pm.response.to.have.jsonBody(\"id\"); ",
+							"    ",
+							"    var jsonData = pm.response.json();",
+							"    pm.environment.set(\"boardId\", jsonData.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"codeBreakerId\": \"{{codeBreakerId}}\",\n \"guess\": {{guess}}\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/boards/{{boardId}}/guess/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"boards",
+						"{{boardId}}",
+						"guess",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Board Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/boards/f23a6abb-ea8d-400d-afe5-06f7211c2be6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boards",
+						"f23a6abb-ea8d-400d-afe5-06f7211c2be6"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
