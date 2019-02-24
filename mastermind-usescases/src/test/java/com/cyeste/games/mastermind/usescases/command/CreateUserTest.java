@@ -2,10 +2,12 @@ package com.cyeste.games.mastermind.usescases.command;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,6 +24,8 @@ import com.cyeste.games.mastermind.domain.port.PlayersRepository;
 
 @RunWith(BlockJUnit4ClassRunner.class)
 public class CreateUserTest {
+
+	private final static Logger LOGGER = Logger.getLogger(CreateUserTest.class.getName());
 
 	private static final String DEFAULT_NAME = "Han Solo";
 	private static final String DEFAULT_ID = "id";
@@ -58,7 +62,8 @@ public class CreateUserTest {
 		Player player = useCaseInterpreter.create(DEFAULT_NAME);
 		assertNotNull(player);
 		assertEquals(DEFAULT_NAME, player.getName());
-		verify(idGenerator).generate();
+		verify(idGenerator,atLeastOnce()).generate();
 		verify(repository, atLeastOnce()).store(player);
+		LOGGER.info("Created player: " + player);
 	}
 }
