@@ -324,5 +324,8 @@ Content-Type: application/json;encoding=utf-8
 
 ## Related links
 
-* http://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
-* https://softwareengineering.stackexchange.com/questions/373413/implementing-a-rest-api-in-a-clean-architecture
+* [Uncle Bob Blog](http://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+* [REST + Clean Architecture hints](https://softwareengineering.stackexchange.com/questions/373413/implementing-a-rest-api-in-a-clean-architecture)
+* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
+* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
+* [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
