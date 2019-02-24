@@ -16,12 +16,12 @@ public class CreateBoard {
 	private static final int DEFAULT_MAX_GAMES_LENGTH = 5; 
 	private static final int DEFAULT_CODE_LENGTH = 5;
 	
-	private DecodingBoardsRepository repository;
+	private DecodingBoardsRepository store;
 	private final IdGenerator<Serializable> idGenerator;
 
 	public CreateBoard(DecodingBoardsRepository repository, IdGenerator<Serializable> idGenerator) {
 		this.idGenerator = idGenerator;
-		this.repository = repository;
+		this.store = repository;
 	}
 	
 	public DecodingBoard create(String[] colorSequence) {
@@ -30,7 +30,7 @@ public class CreateBoard {
 		PatternBuilder codeBuilder = Pattern.builder();
 		Arrays.stream(colorSequence).forEach(color -> codeBuilder.addPeg(color));
 		DecodingBoard board = DecodingBoard.createBoard(idGenerator.generate(), DEFAULT_MAX_GAMES_LENGTH, codeBuilder.build());
-		repository.store(board);
+		store.store(board);
 		return board;
 	}
 	

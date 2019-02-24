@@ -7,13 +7,13 @@ import com.cyeste.games.mastermind.domain.port.PlayersRepository;
 
 public class FindPlayer {
 
-	private final PlayersRepository repository;
+	private final PlayersRepository store;
 	
-	public FindPlayer(PlayersRepository repository) {
-		this.repository = repository;
+	public FindPlayer(PlayersRepository store) {
+		this.store = store;
 	}
 	
 	public Player find(Serializable id) {
-		return repository.findPlayer(id);
+		return store.findPlayer(id);
 	}                                  	
 }

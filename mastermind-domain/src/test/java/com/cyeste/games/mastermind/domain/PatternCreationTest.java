@@ -60,7 +60,7 @@ public class PatternCreationTest {
 	@Test
 	public void someMatchingsPosition() {
 		Pattern pattern = Pattern.builder().addPeg(Color.BLUE).addPeg("GREEN").addPeg(Color.GREEN).addPeg("YELLOW").build();
-		List<Peg> guessPegs = Arrays.asList(pattern.toArray());
+		List<Peg> guessPegs = Arrays.asList(pattern.toPegArray());
 		Collections.reverse(guessPegs);
 		Pattern guess = generateCode(guessPegs.iterator());
 		assertEquals(2, pattern.matchingPegs((guess)));

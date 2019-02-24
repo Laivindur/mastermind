@@ -6,11 +6,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 import org.junit.Before;
@@ -29,10 +28,9 @@ import com.cyeste.games.mastermind.domain.port.IdGenerator;
 import com.cyeste.games.mastermind.domain.port.PlayerBoardsRepository;
 
 @RunWith(BlockJUnit4ClassRunner.class)
-public class CreatePlayerBoardAsCodeBreakerTest {
+public class JoinBoardAsCodeMakerTest {
 
-	private final static String DEFAULT_ID = "id";
-	private final static Logger LOGGER = Logger.getLogger(CreatePlayerBoardAsCodeBreakerTest.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(JoinBoardAsCodeMakerTest.class.getName());
 
 	@Rule
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -43,7 +41,7 @@ public class CreatePlayerBoardAsCodeBreakerTest {
 	@Mock
 	public IdGenerator<Serializable> idGenerator;
 	@Mock
-	private Player codeBreaker;
+	private Player codeMaker;
 	
 	@Mock
 	private DecodingBoard board;
@@ -62,58 +60,49 @@ public class CreatePlayerBoardAsCodeBreakerTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void errorDueToNoCodeBreaker() {
-		useCaseInterpreter.joinAsCodeBreaker(null,null);
+	public void errorDueToNoCodeMaker() {
+		useCaseInterpreter.joinAsCodeMaker(null,null);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void errorDueToNoBoardForCodeBreaker() {
-		useCaseInterpreter.joinAsCodeBreaker(codeBreaker,null);
+	public void errorDueToNoBoardForCodeMaker() {
+		useCaseInterpreter.joinAsCodeMaker(codeMaker,null);
 	}	
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void errorDueToNoCodeBreakerForTheBoard() {
-		useCaseInterpreter.joinAsCodeBreaker(null,board);
+	public void errorDueToNoCodeMakerForTheBoard() {
+		useCaseInterpreter.joinAsCodeMaker(null,board);
 	}	
 		
 	@Test(expected=IllegalArgumentException.class)
-	public void errorDueToPlayerIsAlreadyCodeMaker() {
-		when(existingPlayerBoardAsCodeMaker.isCoder()).thenReturn(true);
-		when(repository.findPlayerBoard(codeBreaker, board)).thenReturn(existingPlayerBoardAsCodeMaker);
-		useCaseInterpreter.joinAsCodeBreaker(codeBreaker, board);
+	public void errorDueToPlayerIsAlreadyCodeBreaker() {
+		when(repository.findPlayerBoard(codeMaker, board)).thenReturn(existingPlayerBoardAsCodeBreaker);
+		useCaseInterpreter.joinAsCodeMaker(codeMaker, board);
 	}
 	
 	@Test
-	public void existingPlayerBoardAsCodeBreaker() {
-		when(idGenerator.generate()).thenReturn(DEFAULT_ID);
-		when(repository.findPlayerBoard(codeBreaker, board)).thenReturn(existingPlayerBoardAsCodeBreaker);
-		when(existingPlayerBoardAsCodeBreaker.isBreaker()).thenReturn(true);
-		PlayerBoard playerBoard = useCaseInterpreter.joinAsCodeBreaker(codeBreaker, board);
+	public void existingPlayerBoardAsCodeMaker() {
+		when(existingPlayerBoardAsCodeMaker.isCoder()).thenReturn(true);
+		when(repository.findPlayerBoard(codeMaker, board)).thenReturn(existingPlayerBoardAsCodeMaker);
+		PlayerBoard playerBoard = useCaseInterpreter.joinAsCodeMaker(codeMaker, board);
 		assertNotNull(playerBoard);
-		assertTrue(playerBoard.isBreaker());
-		assertFalse(playerBoard.isCoder());
+		assertTrue(playerBoard.isCoder());
+		assertFalse(playerBoard.isBreaker());
 		verify(idGenerator, never()).generate();
-		verify(repository, never()).store(existingPlayerBoardAsCodeBreaker);
+		verify(repository, never()).store(existingPlayerBoardAsCodeMaker);
 		LOGGER.info("Existing (Mocked) PlayerBoard: " + playerBoard);
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void errorDueToNotEnoughRoom() {
-		when(repository.findPlayers(eq(board))).thenReturn(Arrays.asList(existingPlayerBoardAsCodeMaker,existingPlayerBoardAsCodeBreaker));
-		useCaseInterpreter.joinAsCodeBreaker(codeBreaker, board);
-	}
-	
 	@Test
-	public void newPlayerBoardAsBreaker() {
+	public void newPlayerBoardAsMaker() {
 		when(idGenerator.generate()).thenReturn("newId");
-		when(repository.findPlayerBoard(codeBreaker, board)).thenReturn(existingPlayerBoardAsCodeMaker);
-		PlayerBoard playerBoard = useCaseInterpreter.joinAsCodeBreaker(codeBreaker, board);
+		when(repository.findPlayerBoard(codeMaker, board)).thenReturn(null);
+		PlayerBoard playerBoard = useCaseInterpreter.joinAsCodeMaker(codeMaker, board);
 		assertNotNull(playerBoard);
-		assertTrue(playerBoard.isBreaker());
-		assertFalse(playerBoard.isCoder());
+		assertTrue(playerBoard.isCoder());
+		assertFalse(playerBoard.isBreaker());
 		assertTrue("newId".equals(playerBoard.getId()));
 		verify(idGenerator, only()).generate();
-		verify(repository, atLeastOnce()).findPlayers(board);
 		verify(repository, atLeastOnce()).store(playerBoard);
 		LOGGER.info("New (Created) PlayerBoard: " + playerBoard);
 	}
