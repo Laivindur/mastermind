@@ -4,16 +4,19 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cyeste.games.mastermind.adapters.api.rest.command.NewPlayerInput;
 import com.cyeste.games.mastermind.adapters.api.rest.exception.ResourceNotFoundException;
 import com.cyeste.games.mastermind.adapters.api.rest.resources.BoardResource;
 import com.cyeste.games.mastermind.adapters.api.rest.resources.PlayerResource;
@@ -71,8 +74,8 @@ public class PlayersController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<PlayerResource> create(@RequestParam("name") final String userName) {
-		Player player = createUserUseCasehandler.create(userName);
+	public ResponseEntity<PlayerResource> create(@RequestBody @Valid NewPlayerInput input) {
+		Player player = createUserUseCasehandler.create(input.getName());
 		return ResponseEntity.ok(PlayerResource.toResource(player));
 	}
 }
