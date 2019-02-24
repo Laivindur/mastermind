@@ -15,7 +15,7 @@ public class PlayerBoard {
 	PlayerBoard(Serializable id, Player player, DecodingBoard board, boolean coder) {
 		Validations.whenNull(player).throwIllegalArgumentException("Player in PlayerBoards is required");
 		Validations.whenNull(board).throwIllegalArgumentException("Board in PlayerBoards is required");
-		Validations.whenNull(id).throwIllegalArgumentException("PlayerBoard idz is required");
+		Validations.whenNull(id).throwIllegalArgumentException("PlayerBoard id is required");
 
 		this.id = id;
 		this.player = player;
@@ -32,6 +32,10 @@ public class PlayerBoard {
 	
 	public boolean isCoder() {
 		return coder;
+	}
+	
+	public boolean isBreaker() {
+		return !isCoder();
 	}
 	
 	public Player getPlayer() {

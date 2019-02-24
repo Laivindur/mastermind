@@ -3,6 +3,7 @@ package com.cyeste.games.mastermind.domain.port;
 import java.io.Serializable;
 import java.util.Collection;
 
+import com.cyeste.games.mastermind.domain.DecodingBoard;
 import com.cyeste.games.mastermind.domain.Player;
 import com.cyeste.games.mastermind.domain.PlayerBoard;
 
@@ -10,13 +11,15 @@ public interface PlayerBoardsRepository {
 
 	void store(PlayerBoard playerBoard);
 	
-	PlayerBoard findPlayerBoard(Serializable id);
+	PlayerBoard findById(Serializable id);
 	
-	Collection<PlayerBoard> findPlayerBoards(Player  player);
+	PlayerBoard findPlayerBoard(Player player, DecodingBoard board);
 	
-	Collection<PlayerBoard> findPlayerBoardsAsCodeMaker(Player player);
+	Collection<PlayerBoard> findBoards(Player player);
 	
-	Collection<PlayerBoard> findPlayerBoardsAsCodeBreaker(Player player);
+	Collection<PlayerBoard> findPlayers(DecodingBoard board);
+	
+	
 	
 	
 }
