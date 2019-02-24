@@ -1,8 +1,11 @@
 package com.cyeste.games.mastermind.usescases.command;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,8 +31,7 @@ import com.cyeste.games.mastermind.domain.port.PlayerBoardsRepository;
 public class CreatePlayerBoardAsCodeMakerTest {
 
 	private final static Logger LOGGER = Logger.getLogger(CreatePlayerBoardAsCodeMakerTest.class.getName());
-	private static final String DEFAULT_ID = "id";
-	
+
 	@Rule
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -48,62 +50,61 @@ public class CreatePlayerBoardAsCodeMakerTest {
 	@Mock
 	private PlayerBoard existingPlayerBoardAsCodeBreaker;
 
-	private CreatePlayerBoard useCaseInterpreter;
+	private JoinBoard useCaseInterpreter;
 	
 	
 	
 	@Before
 	public void setUp() {
-		useCaseInterpreter = new CreatePlayerBoard(repository, idGenerator);
-		when(codeMaker.getId()).thenReturn(DEFAULT_ID+"codeMaker");
-		when(board.getId()).thenReturn(DEFAULT_ID);
-				
-		when(existingPlayerBoardAsCodeMaker.getPlayer()).thenReturn(codeMaker);
-		when(existingPlayerBoardAsCodeMaker.getBoard()).thenReturn(board);
-		when(existingPlayerBoardAsCodeMaker.isCoder()).thenReturn(true);
+		useCaseInterpreter = new JoinBoard(repository, idGenerator);		
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void errorDueToNoCodeMaker() {
-		useCaseInterpreter.joinBoardAsCodeMaker(null,null);
+		useCaseInterpreter.joinAsCodeMaker(null,null);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void errorDueToNoBoardForCodeMaker() {
-		useCaseInterpreter.joinBoardAsCodeMaker(codeMaker,null);
+		useCaseInterpreter.joinAsCodeMaker(codeMaker,null);
+	}	
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void errorDueToNoCodeMakerForTheBoard() {
+		useCaseInterpreter.joinAsCodeMaker(null,board);
 	}	
 		
 	@Test(expected=IllegalArgumentException.class)
 	public void errorDueToPlayerIsAlreadyCodeBreaker() {
 		when(repository.findPlayerBoard(codeMaker, board)).thenReturn(existingPlayerBoardAsCodeBreaker);
-		useCaseInterpreter.joinBoardAsCodeMaker(codeMaker, board);
+		useCaseInterpreter.joinAsCodeMaker(codeMaker, board);
 	}
 	
 	@Test
-	public void noSideEffectsIfAlreadyExist() {
+	public void existingPlayerBoardAsCodeMaker() {
+		when(existingPlayerBoardAsCodeMaker.isCoder()).thenReturn(true);
 		when(repository.findPlayerBoard(codeMaker, board)).thenReturn(existingPlayerBoardAsCodeMaker);
-		PlayerBoard playerBoardA = useCaseInterpreter.joinBoardAsCodeMaker(codeMaker, board);
-		assertNotNull(playerBoardA);
-		LOGGER.info("PlayerBoard A: " + playerBoardA);
-		PlayerBoard playerBoardB = useCaseInterpreter.joinBoardAsCodeMaker(codeMaker, board);
-		assertNotNull(playerBoardB);
-		LOGGER.info("PlayerBoard B: " + playerBoardA);
-		assertEquals(playerBoardA.getId(), playerBoardB.getId());	
-		assertEquals(playerBoardA.getPlayer().getId(), playerBoardB.getPlayer().getId());
-		assertEquals(playerBoardA.getBoard().getId(), playerBoardB.getBoard().getId());
-		verify(repository, atLeastOnce()).findPlayerBoard(codeMaker, board);
+		PlayerBoard playerBoard = useCaseInterpreter.joinAsCodeMaker(codeMaker, board);
+		assertNotNull(playerBoard);
+		assertTrue(playerBoard.isCoder());
+		assertFalse(playerBoard.isBreaker());
+		verify(idGenerator, never()).generate();
+		verify(repository, never()).store(existingPlayerBoardAsCodeMaker);
+		LOGGER.info("Existing (Mocked) PlayerBoard: " + playerBoard);
 	}
 	
-
 	@Test
-	public void createdSuccessfully() {
-		when(idGenerator.generate()).thenReturn(DEFAULT_ID);
+	public void newPlayerBoardAsMaker() {
+		when(idGenerator.generate()).thenReturn("newId");
 		when(repository.findPlayerBoard(codeMaker, board)).thenReturn(null);
-		PlayerBoard playerBoardA = useCaseInterpreter.joinBoardAsCodeMaker(codeMaker, board);
-		assertNotNull(playerBoardA);
-		verify(idGenerator, atLeastOnce()).generate();
-		verify(repository, atLeastOnce()).findPlayerBoard(codeMaker, board);
-		LOGGER.info("PlayerBoard A: " + playerBoardA);
+		PlayerBoard playerBoard = useCaseInterpreter.joinAsCodeMaker(codeMaker, board);
+		assertNotNull(playerBoard);
+		assertTrue(playerBoard.isCoder());
+		assertFalse(playerBoard.isBreaker());
+		assertTrue("newId".equals(playerBoard.getId()));
+		verify(idGenerator, only()).generate();
+		verify(repository, atLeastOnce()).store(playerBoard);
+		LOGGER.info("New (Created) PlayerBoard: " + playerBoard);
 	}
 	
 }

@@ -34,6 +34,10 @@ public class PlayerBoard {
 		return coder;
 	}
 	
+	public boolean isBreaker() {
+		return !isCoder();
+	}
+	
 	public Player getPlayer() {
 		return player;
 	}

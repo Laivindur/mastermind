@@ -1,12 +1,16 @@
 package com.cyeste.games.mastermind.usescases.command;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import org.junit.Before;
@@ -27,9 +31,9 @@ import com.cyeste.games.mastermind.domain.port.PlayerBoardsRepository;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class CreatePlayerBoardAsCodeBreakerTest {
 
+	private final static String DEFAULT_ID = "id";
 	private final static Logger LOGGER = Logger.getLogger(CreatePlayerBoardAsCodeBreakerTest.class.getName());
-	private static final String DEFAULT_ID = "id";
-	
+
 	@Rule
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -37,73 +41,81 @@ public class CreatePlayerBoardAsCodeBreakerTest {
 	public PlayerBoardsRepository repository;
 	
 	@Mock
-	public IdGenerator<Serializable> idGenerator;	
+	public IdGenerator<Serializable> idGenerator;
 	@Mock
 	private Player codeBreaker;
+	
 	@Mock
 	private DecodingBoard board;
 	@Mock
-	private PlayerBoard existingPlayerBoardAsCodeBreaker;
-	@Mock
 	private PlayerBoard existingPlayerBoardAsCodeMaker;
+	@Mock
+	private PlayerBoard existingPlayerBoardAsCodeBreaker;
 
-	private CreatePlayerBoard useCaseInterpreter;
+	private JoinBoard useCaseInterpreter;
 	
 	
 	
 	@Before
 	public void setUp() {
-		useCaseInterpreter = new CreatePlayerBoard(repository, idGenerator);
-		when(codeBreaker.getId()).thenReturn(DEFAULT_ID+"codeBreaker");
-		when(board.getId()).thenReturn(DEFAULT_ID);
-				
-		when(existingPlayerBoardAsCodeBreaker.getPlayer()).thenReturn(codeBreaker);
-		when(existingPlayerBoardAsCodeBreaker.getBoard()).thenReturn(board);
-		when(existingPlayerBoardAsCodeBreaker.isCoder()).thenReturn(false);
-		
-		when(existingPlayerBoardAsCodeMaker.isCoder()).thenReturn(true);
+		useCaseInterpreter = new JoinBoard(repository, idGenerator);		
 	}
-			
+	
 	@Test(expected=IllegalArgumentException.class)
 	public void errorDueToNoCodeBreaker() {
-		useCaseInterpreter.joinBoardAsCodeBreaker(null,null);
+		useCaseInterpreter.joinAsCodeBreaker(null,null);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void errorDueToNoBoardForCodeBreaker() {
-		useCaseInterpreter.joinBoardAsCodeBreaker(codeBreaker,null);
+		useCaseInterpreter.joinAsCodeBreaker(codeBreaker,null);
+	}	
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void errorDueToNoCodeBreakerForTheBoard() {
+		useCaseInterpreter.joinAsCodeBreaker(null,board);
+	}	
+		
+	@Test(expected=IllegalArgumentException.class)
+	public void errorDueToPlayerIsAlreadyCodeMaker() {
+		when(existingPlayerBoardAsCodeMaker.isCoder()).thenReturn(true);
+		when(repository.findPlayerBoard(codeBreaker, board)).thenReturn(existingPlayerBoardAsCodeMaker);
+		useCaseInterpreter.joinAsCodeBreaker(codeBreaker, board);
+	}
+	
+	@Test
+	public void existingPlayerBoardAsCodeBreaker() {
+		when(idGenerator.generate()).thenReturn(DEFAULT_ID);
+		when(repository.findPlayerBoard(codeBreaker, board)).thenReturn(existingPlayerBoardAsCodeBreaker);
+		when(existingPlayerBoardAsCodeBreaker.isBreaker()).thenReturn(true);
+		PlayerBoard playerBoard = useCaseInterpreter.joinAsCodeBreaker(codeBreaker, board);
+		assertNotNull(playerBoard);
+		assertTrue(playerBoard.isBreaker());
+		assertFalse(playerBoard.isCoder());
+		verify(idGenerator, never()).generate();
+		verify(repository, never()).store(existingPlayerBoardAsCodeBreaker);
+		LOGGER.info("Existing (Mocked) PlayerBoard: " + playerBoard);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void errorDueToPlayerIsAlreadyCodeMaker() {
+	public void errorDueToNotEnoughRoom() {
+		when(repository.findPlayers(eq(board))).thenReturn(Arrays.asList(existingPlayerBoardAsCodeMaker,existingPlayerBoardAsCodeBreaker));
+		useCaseInterpreter.joinAsCodeBreaker(codeBreaker, board);
+	}
+	
+	@Test
+	public void newPlayerBoardAsBreaker() {
+		when(idGenerator.generate()).thenReturn("newId");
 		when(repository.findPlayerBoard(codeBreaker, board)).thenReturn(existingPlayerBoardAsCodeMaker);
-		useCaseInterpreter.joinBoardAsCodeBreaker(codeBreaker, board);
-	}
-	
-	@Test
-	public void noSideEffectsIfAlreadyExist() {
-		when(repository.findPlayerBoard(codeBreaker, board)).thenReturn(existingPlayerBoardAsCodeBreaker);
-		PlayerBoard playerBoardA = useCaseInterpreter.joinBoardAsCodeBreaker(codeBreaker, board);
-		assertNotNull(playerBoardA);
-		LOGGER.info("PlayerBoard A: " + playerBoardA);
-		PlayerBoard playerBoardB = useCaseInterpreter.joinBoardAsCodeBreaker(codeBreaker, board);
-		assertNotNull(playerBoardB);
-		LOGGER.info("PlayerBoard B: " + playerBoardA);
-		assertEquals(playerBoardA.getId(), playerBoardB.getId());	
-		assertEquals(playerBoardA.getPlayer().getId(), playerBoardB.getPlayer().getId());
-		assertEquals(playerBoardA.getBoard().getId(), playerBoardB.getBoard().getId());
-		verify(repository, atLeastOnce()).findPlayerBoard(codeBreaker, board);
-	}
-	
-	@Test
-	public void createdSuccessfully() {
-		when(idGenerator.generate()).thenReturn(DEFAULT_ID);
-		when(repository.findPlayerBoard(codeBreaker, board)).thenReturn(null);
-		PlayerBoard playerBoardA = useCaseInterpreter.joinBoardAsCodeBreaker(codeBreaker, board);
-		assertNotNull(playerBoardA);
-		LOGGER.info("PlayerBoard A: " + playerBoardA);
-		verify(idGenerator, atLeastOnce()).generate();
-		verify(repository, atLeastOnce()).findPlayerBoard(codeBreaker, board);
+		PlayerBoard playerBoard = useCaseInterpreter.joinAsCodeBreaker(codeBreaker, board);
+		assertNotNull(playerBoard);
+		assertTrue(playerBoard.isBreaker());
+		assertFalse(playerBoard.isCoder());
+		assertTrue("newId".equals(playerBoard.getId()));
+		verify(idGenerator, only()).generate();
+		verify(repository, atLeastOnce()).findPlayers(board);
+		verify(repository, atLeastOnce()).store(playerBoard);
+		LOGGER.info("New (Created) PlayerBoard: " + playerBoard);
 	}
 	
 }
