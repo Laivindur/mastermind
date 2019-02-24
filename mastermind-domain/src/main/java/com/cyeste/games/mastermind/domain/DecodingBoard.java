@@ -57,7 +57,7 @@ public class DecodingBoard {
 	}
 
 	public boolean leftGames() {
-		return maxGamesSize - (int) games.stream().count() > 0 && !isSolved();
+		return gamesLeft()  > 0 && !isSolved();
 	}
 
 	public Iterator<GuessResult> games() {
@@ -85,5 +85,9 @@ public class DecodingBoard {
 	@Override
 	public String toString() {
 		return String.format(TO_STRING, id.toString(), maxGamesSize, code, Arrays.deepToString(games.toArray()), String.valueOf(solved));
+	}
+
+	public int gamesLeft() {
+		return maxGamesSize - (int) games.stream().count();
 	}
 }

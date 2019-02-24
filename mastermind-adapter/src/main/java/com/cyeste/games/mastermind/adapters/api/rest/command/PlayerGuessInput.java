@@ -20,17 +20,13 @@ public class PlayerGuessInput implements Serializable {
 	@JsonProperty("guess")
 	private String[] guess;
 
-	@JsonProperty("boardId")
-	private String boardId;
 
 	@JsonCreator
 	public PlayerGuessInput(
 			@JsonProperty("codeBreakerId")final String codeBreakerId, 
-			@JsonProperty("guess") final String[] guess, 
-			@JsonProperty("boardId") final String boardId) {
+			@JsonProperty("guess") final String[] guess) {
 		this.codeBreakerId = codeBreakerId;
 		this.guess = guess;
-		this.boardId = boardId;
 	}
 
 	
@@ -45,10 +41,6 @@ public class PlayerGuessInput implements Serializable {
 
 	public String[] getGuess() {
 		return guess;
-	}
-
-	public String getBoardId() {
-		return boardId;
 	}
 	
 	
