@@ -7,6 +7,14 @@
 
 ## Architecutre
 
+I have tried to follow Clean Architecture premisses for the project's composition and structure. Encapsulation, cohesion and decoupling
+I have tried to follow DDD techniques to implement the domain model.
+
+**Disclaimers** : Mastermind-adapter module should provide with more decoupling. Right now it allows upper layers to be aware of too many domain's
+ model details. I should add also a Service layer so that Controllers can be decoupled from the use cases handlers.
+ 
+**More disclaimers**: Initially, I spent too much time on making the API REST to be Hateoas. It took too much and I was running out of time to finish the exam, so I left. I have implemented HATEOAS REST APIs before and it could have made a big deal improvement better the final result of the exam. Regarding Spring Boot configuration componenets, I took mines from one fo my personal projects to save time. Some of them are unecessary for the exam.
+
 ### Domain
 
 * Dependencies: Must not have
@@ -14,7 +22,7 @@
  
 ### UseCases
 
-* Dependency: upon **domain**
+* Dependency: upon **Domain**
 * Components: UserCaseInteractor, InputBoundary, OutputBoundary
  
 ### Adapters
@@ -29,7 +37,21 @@
 
 ## Install
 
+```cmd
+$ git clone https://github.com/Laivindur/mastermind.git
+```
+
+## Compile
+
+```cmd
+$ mvn clean package
+```
+
 ## Run
+
+```cmd
+$ java -jar /<workspace>/mastermind/mastermind-application/target/mastermind-application-0.0.1-SNAPSHOT.jar .xmx128m -xms128m -Duser.timezone=UTC -Dfile.encoding=utf-8 
+```
 
 ### Find boards
 
@@ -319,6 +341,10 @@ Content-Type: application/json;encoding=utf-8
 ```
 
 ## Tests
+
+* Unitari tests all over the project's module
+* End 2 End tests : A proof of concept with Postamn scripts
+* Functional Test : Pending to implement with Spring Test
 
 ## Misc
 
