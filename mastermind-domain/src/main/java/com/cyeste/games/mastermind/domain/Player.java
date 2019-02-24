@@ -1,16 +1,19 @@
 package com.cyeste.games.mastermind.domain;
 
-import java.io.Serializable;
-
 import com.cyeste.games.mastermind.domain.utils.Validations;
 
+/**
+ * Componente de tipo Entity que representa un jugador de Mastermind.
+ * @author Christian Yeste Vidal
+ *
+ */
 public class Player {
 
 	private static final String TO_STRING = "{id: \"%s\", name: \"%s\"}";
 	private String name;
-	private Serializable id;
+	private String id;
 	
-	private Player(Serializable id, String name){
+	private Player(String id, String name){
 		this.id = id;
 		this.name = name;
 	}
@@ -19,7 +22,7 @@ public class Player {
 		return name;
 	}
 	
-	public Serializable getId() {
+	public String getId() {
 		return id;
 	}
 	
@@ -34,7 +37,7 @@ public class Player {
 	
 	public final static class PlayerBuilder {
 		private String name;
-		private Serializable id;
+		private String id;
 		
 		PlayerBuilder() {
 		}
@@ -44,7 +47,7 @@ public class Player {
 			return this;
 		}
 		
-		public PlayerBuilder id(Serializable id) {
+		public PlayerBuilder id(String id) {
 			this.id = id;
 			return this;
 		}

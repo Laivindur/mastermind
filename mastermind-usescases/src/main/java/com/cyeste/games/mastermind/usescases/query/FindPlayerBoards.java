@@ -1,6 +1,5 @@
 package com.cyeste.games.mastermind.usescases.query;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 import com.cyeste.games.mastermind.domain.DecodingBoard;
@@ -8,6 +7,11 @@ import com.cyeste.games.mastermind.domain.Player;
 import com.cyeste.games.mastermind.domain.PlayerBoard;
 import com.cyeste.games.mastermind.domain.port.PlayerBoardsRepository;
 
+/**
+ * Componente capturador de casos de uso relacionados con  la búsqueda de relaciones jugadores-tableros
+ * @author Christian Yeste Vidal
+ *
+ */
 public class FindPlayerBoards {
 
 	private final PlayerBoardsRepository store;
@@ -25,7 +29,7 @@ public class FindPlayerBoards {
 		return store.findPlayers(board).iterator();
 	}
 	
-	public PlayerBoard findById(Serializable id) {
+	public PlayerBoard findById(String id) {
 		return store.findById(id);
 	}
 	

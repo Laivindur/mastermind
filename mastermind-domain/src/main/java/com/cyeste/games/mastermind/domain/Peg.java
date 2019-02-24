@@ -3,7 +3,9 @@ package com.cyeste.games.mastermind.domain;
 import com.cyeste.games.mastermind.domain.utils.Validations;
 
 /**
- * 
+ * Componente de tipo <i>ValueObject</i> que representa un Peg. Un Peg no és más que un elemento de la secuencia que forma un código (@link Pattern}
+ * Un Peg representa un color (indistintamente de su posición en el código). 
+ * Los colores disponibles están definidos en la {@code enum} @link Color}, por lo que la paleta de colores disponibles está limitada
  * @author Christian Yeste Vidal
  *
  */
@@ -57,6 +59,11 @@ public class Peg {
 		return String.format(TO_STRING, color.name());
 	}
 
+	/**
+	 * 
+	 * @author Christian Yeste Vidal
+	 *
+	 */
 	public static enum Color {
 		BLUE,RED,YELLOW,CYAN,GREEN,PURPLE,BROWN,PINK, BLANK
 	}

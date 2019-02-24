@@ -1,11 +1,15 @@
 package com.cyeste.games.mastermind.usescases.query;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 import com.cyeste.games.mastermind.domain.DecodingBoard;
 import com.cyeste.games.mastermind.domain.port.DecodingBoardsRepository;
 
+/**
+ * Componente capturador de casos de uso relacionados con  la búsqueda de tableros
+ * @author Christian Yeste Vidal
+ *
+ */
 public class FindBoard {
 
 	private DecodingBoardsRepository store;
@@ -14,8 +18,8 @@ public class FindBoard {
 		this.store = store;
 	}
 	
-	public DecodingBoard find(Serializable id) {
-		return store.findBoardById(id);
+	public DecodingBoard find(String id) {
+		return store.findById(id);
 	}
 	
 	public Iterator<DecodingBoard> findAll(){

@@ -1,6 +1,5 @@
 package com.cyeste.games.mastermind.usescases.command;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -11,15 +10,22 @@ import com.cyeste.games.mastermind.domain.port.IdGenerator;
 import com.cyeste.games.mastermind.domain.port.PlayerBoardsRepository;
 import com.cyeste.games.mastermind.domain.utils.Validations;
 
+/**
+ * Componente capturador de casos de uso relacionados con la creación de vínculos entre jugador y tablero.
+ * Las dós únicas relaciones que puede tener un jugador con un tablero son como : codeMaker (generador del tablero) o 
+ * codeBreaker (jugador que intenta descifrar el tablero)
+ * @author Christian Yeste Vidal
+ *
+ */
 public class JoinBoard {
 
-	//TODO : Parametrizar esto
+	//XXX : Esto podría ser parametrizable por aplicación.
 	private static final int DEFAULT_MAX_PLAYERS_PER_BOARD = 2;
 	
 	private final PlayerBoardsRepository store;
-	private final IdGenerator<Serializable> idGenerator;
+	private final IdGenerator idGenerator;
 
-	public JoinBoard(PlayerBoardsRepository repository, IdGenerator<Serializable> idGenerator) {
+	public JoinBoard(PlayerBoardsRepository repository, IdGenerator idGenerator) {
 		this.store = repository;
 		this.idGenerator = idGenerator;
 	}

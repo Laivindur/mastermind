@@ -3,13 +3,13 @@ package com.cyeste.games.mastermind.usescases.command;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -41,7 +41,7 @@ public class JoinBoardAsCodeBreakerTest {
 	public PlayerBoardsRepository repository;
 	
 	@Mock
-	public IdGenerator<Serializable> idGenerator;
+	public IdGenerator idGenerator;
 	@Mock
 	private Player codeBreaker;
 	

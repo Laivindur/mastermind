@@ -1,6 +1,5 @@
 package com.cyeste.games.mastermind.adapters.store;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +23,7 @@ import com.cyeste.games.mastermind.domain.port.PlayerBoardsRepository;
  * @author Christian Yeste Vidal
  *
  */
-@Repository("inPlayersAndBoardsStore")
+@Repository
 public class InMemoryPalyerAndBoardStore extends AbstractInMemoryStore implements PlayerBoardsRepository {
 	
 		
@@ -39,7 +38,7 @@ public class InMemoryPalyerAndBoardStore extends AbstractInMemoryStore implement
 	}
 
 	@Override
-	public PlayerBoard findById(Serializable id) {
+	public PlayerBoard findById(String id) {
 		Optional<Object> entity = Optional.ofNullable(getDatasource().get(id));
 		if(entity.isPresent()) {
 			return PlayerBoard.class.cast(entity.get());

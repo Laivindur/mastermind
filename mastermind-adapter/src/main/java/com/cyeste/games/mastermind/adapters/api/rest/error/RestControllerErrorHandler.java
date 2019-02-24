@@ -2,6 +2,7 @@ package com.cyeste.games.mastermind.adapters.api.rest.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -56,4 +57,19 @@ public class RestControllerErrorHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResource(ex.getMessage(),ex));
 
 	}
+	/**
+	 * Metodo HTTP no soportado
+	 * @param request
+	 * @param response
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	@ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
+	@ResponseBody
+	public ResponseEntity<ErrorResource> methodNotAllowed(Exception ex) {
+		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(new ErrorResource(ex.getMessage(),ex));
+
+	}
+	
 }
